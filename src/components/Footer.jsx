@@ -1,4 +1,4 @@
-import logo from "../assets/svg/logo.svg";
+import logo from "../assets/svg/footer_logo.svg";
 export default function Footer() {
   return (
     <>
@@ -9,7 +9,7 @@ export default function Footer() {
               <img
                 src={logo}
                 alt="logo"
-                className="w-25 d-flex mx-md-0 mx-auto"
+                className="w-50 d-flex mx-md-0 mx-auto"
               />
               <p className="font-footer mt-4 opacity-75 text-center text-md-start">
                 Our vision is to provide convenience <br />

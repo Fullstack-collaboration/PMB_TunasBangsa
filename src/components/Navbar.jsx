@@ -45,7 +45,7 @@ function NavbarComponent() {
   useEffect(() => {}, [userData]);
   return (
     <Navbar expand="lg" className={changeColor ? "color-active" : ""}>
-      <div className="container-fluid mx-lg-5 mt-lg-4 ">
+      <div className="container-fluid mx-lg-5 mt-lg-2 ">
         <Navbar.Brand href="/">
           <img src={logo} alt="logo" className="w-75" />
         </Navbar.Brand>
@@ -63,12 +63,15 @@ function NavbarComponent() {
         <Navbar.Collapse id="navbarTogglerDemo02">
           <Nav className="me-auto mb-2 mb-lg-0">
             <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
-              <Nav.Link href="/">Beranda</Nav.Link>
+              <Nav.Link href="/">Biodata</Nav.Link>
             </Nav.Item>
             <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
-              <Nav.Link href="/tim-LiterasiKita">Tentang Kami</Nav.Link>
+              <Nav.Link href="/berkas">Berkas</Nav.Link>
             </Nav.Item>
-            <NavDropdown
+            <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
+              <Nav.Link href="/biodata">Status Login</Nav.Link>
+            </Nav.Item>
+            {/* <NavDropdown
               title="Program Kami"
               id="our-programs-dropdown"
               className="text-decoration-none text-center text-dark fw-semibold custom-dropdown"
@@ -85,7 +88,7 @@ function NavbarComponent() {
               >
                 NontonPintar
               </NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
           </Nav>
           <Nav className=" ms-auto d-flex navbar-nav">
             {userData ? (
