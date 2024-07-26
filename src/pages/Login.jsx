@@ -122,6 +122,7 @@ function Login() {
                 fluid
                 width="80%"
                 className="img-fluid"
+                id={styles.slowBounce}
               />
             </Col>
             <Col lg={3} md={12} className="align-self-start mt-5">
