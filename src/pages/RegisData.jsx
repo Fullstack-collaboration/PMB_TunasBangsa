@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import readings from "../assets/svg/asset-readings.svg";
 import contributions from "../assets/svg/asset-contribution.svg";
-import styles from "./ProfileUser.module.css";
+import styles from "./RegisData.module.css";
 import axios from "axios";
 import CardBuku from "../components/CardBuku";
 import CardVideo from "../components/CardVideo";
@@ -174,7 +174,6 @@ export default function RegisData() {
                   </Form.Group>
                 </Col>
               </Row>
-              <Button type="submit" className="btn btn-primary">Submit</Button>
             </Form>
           </Container>
 
@@ -231,7 +230,7 @@ export default function RegisData() {
                       <option value="">Pilih Waktu</option>
                       <option value="below1M">08.00 WIB (Pagi)</option>
                       <option value="1M-3M">14.00 WIB (Siang)</option>
-                      <option value="3M-5M">(Malam)</option>
+                      <option value="3M-5M">18.00 WIB (Malam)</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -255,7 +254,19 @@ export default function RegisData() {
                   </Form.Group>
                 </Col>
               </Row>
-              <Button type="submit" className="btn btn-primary">Submit</Button>
+              <Row className="justify-content-center mt-3 ">
+                <Col>
+                  <div className="d-flex justify-content-center ">
+                    <Button
+                      type="submit"
+                      className="btn btn-light bgWarna text-white"
+                      id={styles.submitBtn}
+                    >
+                      Gass Registrasi Kuliah
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
             </Form>
           </Container>
         </Container>

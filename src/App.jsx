@@ -1,6 +1,7 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Homepage from "./pages/Homepage";
+import DashboardAdmin from "./pages/DashboardAdmin";
 import Buku from "./pages/Halaman-Buku/Buku";
 import BacaBuku from "./pages/Halaman-Buku/BacaBuku";
 import DetailBuku from "./pages/Halaman-Buku/DetailBuku";
@@ -32,6 +33,7 @@ function App() {
       {/* routing halaman */}
       <Routes>
         <Route path="/" element={<Homepage />} />
+        <Route path="/admin" element={<DashboardAdmin />} />
         <Route path="/halaman-buku" element={<Buku />} />
         <Route path="/halaman-buku/detail-buku/:id" element={<DetailBuku />} />
         <Route path="/halaman-buku/baca-buku/:id" element={<BacaBuku />} />
