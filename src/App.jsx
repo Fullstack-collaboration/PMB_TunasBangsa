@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import TeamLiterasiKita from "./pages/TimLiterasiKita";
 import ProfileUser from "./pages/ProfileUser";
+import RegisData from "./pages/RegisData";
 import Donasi from "./pages/Halaman-Donasi/Donasi";
 import DonasiUang from "./pages/Halaman-Donasi/Donasi-Uang/DonasiUang";
 import Payment from "./pages/Halaman-Donasi/Donasi-Uang/Payment";
@@ -48,6 +49,7 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/tim-LiterasiKita" element={<TeamLiterasiKita />} />
         <Route path="/profile" element={<ProfileUser />} />
+        <Route path="/regis" element={<RegisData />} />
         <Route path="/halaman-donasi" element={<Donasi />} />
         <Route path="/halaman-donasi/donasi-uang" element={<DonasiUang />} />
         <Route path="/halaman-donasi/donasi-uang/riwayat" element={<HistoryDonasi />} />
