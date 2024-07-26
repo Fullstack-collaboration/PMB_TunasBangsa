@@ -2,7 +2,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import "../../pages/Homepage.css";
 import heroImage from "../../assets/svg/hero_landing_pmb.svg";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const HeroSection = () => {
     return (
@@ -19,14 +19,14 @@ const HeroSection = () => {
                             2024 - 2025
                         </h1>
                         <div className="text-justify text-center text-lg-start text-warna-third mt-5">
-                        <Link data-aos="fade-right"
+                        <NavLink data-aos="fade-right"
                             style={{ backgroundColor: " #199CD4" }}
                             className="btn  border-0 text-white rounded shadow px-3 py-3"
-                            href="halaman-donasi"
+                            to="/register"
                             role="button"
                         >
-                            Learn More &rarr;
-                        </Link>
+                            Daftar Sekarang &rarr;
+                        </NavLink>
                         </div>
                         </div>
                     </div>
