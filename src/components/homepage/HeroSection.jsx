@@ -40,7 +40,7 @@ const HeroSection = () => {
                     </div>
                     </div>
                     <div className="scroll-btn">
-                    <a href="#LiterasiKita">
+                    <a href="#Prodi">
                         <div className="circle">
                         <i className="icon">&#x279C;</i>
                         </div>

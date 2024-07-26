@@ -83,24 +83,30 @@ export default function Footer() {
                 Tentang Kami
               </p>
               <p className="font-footer opacity-75 text-center text-md-start">
-                Visi dan Misi LiterasiKita
+                Visi dan Misi STIKOM Tunas Bangsa
               </p>
               <p className="font-footer opacity-75 text-center text-md-start">
-                Team LiterasiKita
+                Team Website Development
               </p>
             </div>
-            <div className="col-md-2 col-12">
+            <div className="col-md-3 col-12">
               <p className="font-footer opacity-75 fw-bold text-center text-md-start">
-                Program Kami
+                Program Studi
               </p>
               <p className="font-footer opacity-75 text-center text-md-start">
-                BukuPedia
+                Teknik Informatika (S1)
               </p>
               <p className="font-footer opacity-75 text-center text-md-start">
-                NontonPintar
+                Sistem Informasi (S1)
+              </p>
+              <p className="font-footer opacity-75 text-center text-md-start">
+                Manajemen Informatika (D3)
+              </p>
+              <p className="font-footer opacity-75 text-center text-md-start">
+                Komputerisasi Akutansi (D3)
               </p>
             </div>
-            <div className="col-md-2 col-12">
+            <div className="col-md-1 col-12">
               <p className="font-footer opacity-75 fw-bold text-center text-md-start">
                 Socials
               </p>
@@ -119,12 +125,12 @@ export default function Footer() {
             </div>
           </div>
           <div className="row mt-3">
-            <div className="col-md-8 col-12 text-center text-md-start order-3 order-md-0">
+            <div className="col-md-5 col-12 text-center text-md-start order-3 order-md-0">
               <p className="font-footer opacity-75">
-                ©2023LiterasiKita. All rights reserved
+                ©2024 PMB Stikom Tunas Bangsa. All rights reserved
               </p>
             </div>
-            <div className="col-md-2 col-12 text-center text-md-start">
+            <div className="col-md-3 col-12 text-center text-md-start">
               <p className="font-footer opacity-75">Privacy & Policy</p>
             </div>
             <div className="col-md-2 col-12 text-center text-md-start">
