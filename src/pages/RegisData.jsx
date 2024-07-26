@@ -1,12 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import readings from "../assets/svg/asset-readings.svg";
-import contributions from "../assets/svg/asset-contribution.svg";
+
 import styles from "./RegisData.module.css";
 import axios from "axios";
-import CardBuku from "../components/CardBuku";
-import CardVideo from "../components/CardVideo";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
