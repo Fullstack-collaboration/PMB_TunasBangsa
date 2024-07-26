@@ -1,9 +1,9 @@
-import logo from "../assets/logo.svg";
+import logo from "../assets/svg/footer_logo.svg";
 import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
 import "./navbar.css";
 import { useState, useEffect } from "react";
 import { BsCaretDownFill } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 
 function NavbarComponent() {
   const [changeColor, setChangeColor] = useState(false);
@@ -45,10 +45,10 @@ function NavbarComponent() {
   useEffect(() => {}, [userData]);
   return (
     <Navbar expand="lg" className={changeColor ? "color-active" : ""}>
-      <div className="container-fluid mx-lg-5 mt-lg-4 ">
-        <Navbar.Brand href="/">
+      <div className="container-fluid mx-lg-5 mt-lg-2 ">
+        <NavLink to="/">
           <img src={logo} alt="logo" className="w-75" />
-        </Navbar.Brand>
+        </NavLink>
         <button
           className="navbar-toggler"
           type="button"
@@ -63,12 +63,15 @@ function NavbarComponent() {
         <Navbar.Collapse id="navbarTogglerDemo02">
           <Nav className="me-auto mb-2 mb-lg-0">
             <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
-              <Nav.Link href="/">Beranda</Nav.Link>
+              <NavLink to="/biodata" className={"btn fw-semibold"}>Biodata</NavLink>
             </Nav.Item>
             <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
-              <Nav.Link href="/tim-LiterasiKita">Tentang Kami</Nav.Link>
+              <NavLink to="/berkas" className={"btn fw-semibold"}>Berkas</NavLink>
             </Nav.Item>
-            <NavDropdown
+            <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
+              <NavLink to="/status" className={"btn fw-semibold"}>Status Pendaftaran</NavLink>
+            </Nav.Item>
+            {/* <NavDropdown
               title="Program Kami"
               id="our-programs-dropdown"
               className="text-decoration-none text-center text-dark fw-semibold custom-dropdown"
@@ -85,7 +88,7 @@ function NavbarComponent() {
               >
                 NontonPintar
               </NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
           </Nav>
           <Nav className=" ms-auto d-flex navbar-nav">
             {userData ? (
@@ -137,12 +140,12 @@ function NavbarComponent() {
                   className="nav-item mt-3 text-center font-general"
                   id="login"
                 >
-                  <Nav.Link
+                  <NavLink
                     className="btn btn-link text-decoration-none text-primary fw-bold"
-                    href="/login"
+                    to="/login"
                   >
                     Login
-                  </Nav.Link>
+                  </NavLink>
                 </Nav.Item>
                 <Nav.Item
                   className="nav-item mt-2 text-center font-general"
