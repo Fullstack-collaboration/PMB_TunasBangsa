@@ -9,6 +9,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ProfileUser from "./pages/ProfileUser";
 import RegisData from "./pages/RegisData";
 import Berkas from "./pages/Berkas";
+import Status from "./pages/Status";
 
 function App() {
   const location = useLocation();
@@ -27,7 +28,7 @@ function App() {
         <Route path="/profile" element={<ProfileUser />} />
         <Route path="/biodata" element={<RegisData />} />
         <Route path="/berkas" element={<Berkas />} />
-        <Route path="/status" element={false} />
+        <Route path="/status" element={<Status />} />
         <Route path="/getall" element={false} />
 
       </Routes>
