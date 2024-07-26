@@ -14,7 +14,7 @@ export default function PenerimaanMahasiswaBaru() {
   return (
     <>
       <div className="halaman-penerimaan-mahasiswa" style={{ paddingTop: "100px" }}>
-        <Container>
+        <Container className="mt-5">
           <Row>
             <h2 className="text-center fw-bold mb-4">Data Penerimaan Mahasiswa Baru</h2>
           </Row>
