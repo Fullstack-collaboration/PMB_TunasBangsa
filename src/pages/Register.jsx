@@ -17,8 +17,8 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   // state yang di kirim
   const [formData, setFormData] = useState({
-    nama: "",
-    jenisKelamin: "",
+    name: "",
+    gender: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -37,11 +37,11 @@ export default function Register() {
     e.preventDefault();
     // Mengatur state isLoading menjadi true saat proses pengiriman dimulai
     setIsLoading(true);
-    const { nama, jenisKelamin, email, password, confirmPassword, noHp, bio } =
+    const { name, gender, email, password, confirmPassword, noHp, bio } =
       formData;
 
     // ngecek setiap inputan user
-    if (!nama || !jenisKelamin || !email || !password || !confirmPassword) {
+    if (!name || !gender || !email || !password || !confirmPassword) {
       toast.error("Semua field harus diisi.");
       setIsLoading(false); // Mengatur state isLoading menjadi false setelah menampilkan pesan kesalahan
     }
@@ -53,23 +53,7 @@ export default function Register() {
       // kalo semua inputan sudah oke maka
       try {
         //
-        const data = await axios.post(
-          `${import.meta.env.VITE_APP_LINK_API}/auth/register`,
-          {
-            nama,
-            jenisKelamin,
-            email,
-            password,
-            confirmPassword,
-            noHp,
-            bio,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const data = await axios.post(`http://localhost:3003/register`, formData);
         toast.success(
           "Pendaftaran berhasil! Anda akan diarahkan ke halaman login dalam 2 detik."
         );
@@ -138,25 +122,25 @@ export default function Register() {
             <Col lg={3} md={12} className="align-self-start mt-5">
               <Form onSubmit={handleSubmit} id="register-form">
                 <Form.Group className="mb-3">
-                  <Form.Label htmlFor="nama-lengkap">Nama lengkap</Form.Label>
+                  <Form.Label htmlFor="name-lengkap">name lengkap</Form.Label>
                   <Form.Control
                     type="text"
-                    id="nama"
-                    aria-describedby="namaHelp"
+                    id="name"
+                    aria-describedby="nameHelp"
                     onChange={handleChange} // Tambahkan ini
-                    value={formData.nama} // Tambahkan ini
+                    value={formData.name} // Tambahkan ini
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="jenis-kelamin">Jenis kelamin</Form.Label>
                   <Form.Select
-                    id="jenisKelamin"
+                    id="gender"
                     onChange={handleChange} // Tambahkan ini
-                    value={formData.jenisKelamin} // Tambahkan ini
+                    value={formData.gender} // Tambahkan ini
                   >
                     <option>-- Pilih Jenis kelamin --</option>
-                    <option value="pria">Pria</option>
-                    <option value="wanita">Wanita</option>
+                    <option value="laki-laki">Laki-Laki</option>
+                    <option value="perempuan">Perempuan</option>
                   </Form.Select>
                 </Form.Group>
                 <Form.Group className="mb-3">

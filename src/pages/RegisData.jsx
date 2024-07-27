@@ -12,6 +12,36 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisData() {
 
+  const [formData, setFormData] = useState({
+    userId: "",
+    fullName: "",
+    nisn: "",
+    nik: "",
+    birthDate: "",
+    address: "",
+    fatherName: "",
+    fatherOccupation: "",
+    fatherEducation: "",
+    fatherSalary: "",
+    fatherAddress: "",
+    fatherBirthDate: "",
+    motherName: "",
+    motherBirthdate: "",
+    motherAddress: "",
+    motherOccupation: "",
+    schoolOrigin: "",
+    department: "",
+  })
+
+  const [receipt, setReceipt] = useState(null)
+
+  const handleChange = () => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
   return (
     <>
       <div className="halaman-profile">
@@ -25,11 +55,11 @@ export default function RegisData() {
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="Nisn">NISN</Form.Label>
-                    <Form.Control type="text" id="Nisn" />
+                    <Form.Control type="text" name="nisn" onChange={handleChange} id="Nisn" />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="fullname">Nama Lengkap</Form.Label>
-                    <Form.Control type="text" id="fullname" />
+                    <Form.Control type="text" id="fullname" onChange={handleChange} />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="TptLahir">Tempat Lahir</Form.Label>

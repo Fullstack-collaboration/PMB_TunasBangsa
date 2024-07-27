@@ -41,6 +41,7 @@ function NavbarComponent() {
 
   const dataLocalStorage = localStorage.getItem("data");
   const userData = JSON.parse(dataLocalStorage);
+  console.log(userData);
 
   useEffect(() => {}, [userData]);
   return (
@@ -108,7 +109,7 @@ function NavbarComponent() {
                       id="user-avatar"
                       className="img-fluid border border-white border-2 rounded-circle"
                       style={{ width: "30px", height: "30px" }}
-                      src={userData.profileImage}
+                      src={userData.avatar}
                       alt="user"
                     />
                     <span id="user-name">{userData.nama}</span>
