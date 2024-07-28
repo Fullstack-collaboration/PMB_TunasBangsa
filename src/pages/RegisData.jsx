@@ -348,7 +348,7 @@ export default function RegisData() {
                       Gass Registrasi Kuliah
                     </Button>
                   </div>
-                </Col>
+                </Col>g
               </Row>
             </Form>
           </Container>
