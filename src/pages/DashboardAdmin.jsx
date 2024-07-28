@@ -1,15 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Table } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function PenerimaanMahasiswaBaru() {
-  const sampleData = [
-    { id: 1, name: "Ahmad Fauzi", major: "Teknik Informatika", status: "Belum Bayar" },
-    { id: 2, name: "Siti Aisyah", major: "Sistem Informasi", status: "Sudah Bayar + Biaya Cicilan Pertama" },
-    { id: 3, name: "Budi Santoso", major: "Teknik Komputer", status: "Sudah Bayar" },
-    { id: 4, name: "Rina Kurnia", major: "Teknik Informatika", status: "Sudah Bayar" }
-  ];
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://pmb-backend.vercel.app/user/getall");
+        console.log("API response:", response.data); // Print response to console
+
+        if (response.data && response.data.user) {
+          const user = response.data.user;
+          console.log("User data:", user); // Ensure we're getting the correct user data
+          
+          const student = {
+            id: user.id,
+            name: user.biodata.fullName,
+            major: user.biodata.department,
+            status: user.biodata.status,
+          };
+          console.log("Parsed student data:", student); // Ensure we're parsing the correct student data
+          setStudents([student]);
+        } else {
+          toast.error("Data tidak ditemukan.");
+        }
+      } catch (error) {
+        toast.error("Gagal memuat data mahasiswa.");
+        console.error("There was an error fetching the data!", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -28,7 +54,7 @@ export default function PenerimaanMahasiswaBaru() {
               </tr>
             </thead>
             <tbody>
-              {sampleData.map((student, index) => (
+              {students.map((student, index) => (
                 <tr key={student.id}>
                   <td>{index + 1}</td>
                   <td>{student.name}</td>

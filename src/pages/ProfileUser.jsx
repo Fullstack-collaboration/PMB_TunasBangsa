@@ -1,398 +1,200 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-
-import styles from "./ProfileUser.module.css";
+import { useEffect, useState } from "react";
+import { Container, Row, Col, Form, Button } from "react-bootstrap"; 
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-export default function ProfileUser() {
-  const [totalBookmarks, setTotalBookmarks] = useState(0);
-  const [donasi, setDonasi] = useState("0");
-  const fileInputRef = useRef(null);
-  const [videoIds, setVideoIds] = useState([]);
-  const [bookIds, setBookIds] = useState([]);
-  const [dataBooks, setDataBooks] = useState([]);
-  const [dataVideos, setDataVideos] = useState([]);
-  const [data, setData] = useState({
-    nama: "",
-    jenisKelamin: "",
-    email: "",
-    profileImage: "",
-    noHp: "",
-    bio: "",
-  });
+export default function ViewData() {
+  const [formData, setFormData] = useState(null);
   const navigate = useNavigate();
-  const dataLocalStorage = localStorage.getItem("data");
-  const userData = JSON.parse(dataLocalStorage);
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const formData = new FormData();
-
-      formData.append("profileImage", fileInputRef.current.files[0]);
-      formData.append("nama", data.nama);
-      formData.append("jenisKelamin", data.jenisKelamin);
-      formData.append("email", data.email);
-      formData.append("noHp", data.noHp);
-      formData.append("bio", data.bio);
-
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${userData.token}`,
-        },
-      };
-
-      const dataEdit = await axios.put(
-        `${import.meta.env.VITE_APP_LINK_API}/users/edit-profile/${
-          userData._id
-        }`,
-        formData,
-        config
-      );
-
-      const { role, nama, jenisKelamin, _id, email, profileImage, bio, noHp } =
-        dataEdit.data;
-
-      const userUpdateData = {
-        role,
-        nama,
-        jenisKelamin,
-        email,
-        profileImage,
-        bio,
-        noHp,
-        _id,
-      };
-
-      localStorage.setItem("data", JSON.stringify(userUpdateData));
-      toast.success("Update berhasil!");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    } catch (error) {
-      toast.error("Update gagal");
-    }
-  };
-
-  const getTotalDonasiByUser = async () => {
-    try {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_APP_LINK_API}/donasi/total-donasi/${
-          userData._id
-        }`
-      );
-      // console.log(data[0].total_donasi);
-      setDonasi(data[0].total_donasi);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const getTotalBookmarks = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_LINK_API}/bookmark/user/total-bookmark/${
-          userData._id
-        }`
-      );
-      setTotalBookmarks(response.data.totalBookmarks);
-    } catch (error) {
-      console.error("Error fetching total bookmarks:", error.response);
-    }
-  };
-
-  const getBookmarkByUser = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_LINK_API}/bookmark/user/data-bookmark/${
-          userData._id
-        }`
-      );
-      const videoIds = [];
-      const bookIds = [];
-      response.data.forEach((bookmark) => {
-        if (bookmark.videoID) {
-          videoIds.push(bookmark.videoID);
-        }
-
-        if (bookmark.bookID) {
-          bookIds.push(bookmark.bookID);
-        }
-      });
-
-      setVideoIds(videoIds);
-      setBookIds(bookIds);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // console.log(dataBooks);
-  // console.log(dataVideos);
-  useEffect(() => {
-    if (!userData) {
-      navigate("/login");
-    } else {
-      setData({
-        nama: userData.nama,
-        jenisKelamin: userData.jenisKelamin,
-        email: userData.email,
-        profileImage: userData.profileImage,
-        noHp: userData.noHp,
-        bio: userData.bio,
-      });
-    }
-  }, []);
 
   useEffect(() => {
-    getBookmarkByUser();
-    getTotalBookmarks();
-    getTotalDonasiByUser();
-  }, []);
+    const user = JSON.parse(localStorage.getItem("data"));
+    if (user) {
+      const userId = parseInt(user.id);
+      axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
+        .then(response => {
+          if (response.data.user.biodata) {
+            setFormData(response.data.user.biodata);
+          } else {
+            toast.info("Kamu belum mengisi biodata.");
+            navigate("/regisdata");
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching biodata:", error);
+        });
+    }
+  }, [navigate]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const videoData = [];
-      const bookData = [];
 
-      for (const videoId of videoIds) {
-        try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_APP_LINK_API}/videos/${videoId}`
-          );
-          videoData.push(response.data);
-        } catch (error) {
-          console.error("Error fetching video data:", error);
-        }
-      }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
 
-      for (const bookId of bookIds) {
-        try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_APP_LINK_API}/books/${bookId}`
-          );
-          bookData.push(response.data);
-        } catch (error) {
-          console.error("Error fetching book data:", error);
-        }
-      }
+  if (!formData) {
+    return <p>Loading...</p>;
+  }
 
-      setDataVideos(videoData);
-      setDataBooks(bookData);
-    };
 
-    fetchData();
-  }, [videoIds, bookIds]);
   return (
     <>
       <div className="halaman-profile">
-        <ToastContainer />
         <Container className="mt-5">
           <Row>
-            <h2 className="text-center">Profile</h2>
+            <h2 className="text-center fw-bold">Data Diri</h2>
           </Row>
-
-          <Row className="justify-content-center mt-5">
-            <Col md={6} className="d-flex justify-content-center">
-              <div className={styles.photoContainer}>
-                <div className={styles.roundedPhoto}>
-                  <img
-                    id="previewPhoto"
-                    src={data.profileImage}
-                    alt="Preview"
-                    className={styles.previewPhoto}
-                  />
-                </div>
-              </div>
-            </Col>
-          </Row>
-          <Row className="justify-content-center mt-1 mb-5">
-            <Col md={6} className="d-flex justify-content-center">
-              <Form.Group className="mb-3">
-                <Form.Label
-                  htmlFor="upload-button"
-                  className={styles.customfileupload}
-                >
-                  Upload Foto
-                </Form.Label>
-                <Form.Control
-                  type="file"
-                  id="upload-button"
-                  ref={fileInputRef}
-                  style={{ display: "none" }}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Container>
-            <Row className="justify-content-center align-items-center">
-              <Col lg={4} md={4} sm={12}>
-                <div
-                  className="bgWarna rounded p-3 text-center"
-                  id={styles.bgReadings}
-                >
-                  <img className="img-fluid w-25" src={readings} alt="" />
-                  <div className="text-white fs-2 mt-3">{totalBookmarks}</div>
-                  <div className="text-white fs-2">Readings</div>
-                </div>
-              </Col>
-              <Col lg={1} md={1} sm={3} className="col12 mt-2"></Col>
-              <Col lg={4} md={4} sm={12}>
-                <div
-                  className="bgWarna rounded p-3 text-center"
-                  id={styles.bgContributions}
-                >
-                  <img className="img-fluid w-25" src={contributions} alt="" />
-                  <div className="text-white fs-2 mt-3">{donasi}</div>
-                  <div className="text-white fs-2">Contribution</div>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-          <br />
-          <br />
-          <br />
           <Container className="mt-5">
-            <Form onSubmit={handleSubmit}>
               <Row>
-                <Col lg={6} md={12} sm={12}>
+                <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="nama-lengkap">Nama lengkap</Form.Label>
-                    <Form.Control
-                      type="text"
-                      id="nama"
-                      value={data.nama}
-                      placeholder="Masukkan nama lengkap Anda"
-                      onChange={handleChange}
-                    />
+                    <Form.Label htmlFor="Nisn">NISN</Form.Label>
+                    <Form.Control type="text" name="nisn" value={formData.nisn} id="Nisn" disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="fullname">Nama Lengkap</Form.Label>
+                    <Form.Control type="text" id="fullname" name="fullName" value={formData.fullName} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="TptLahir">Tempat Lahir</Form.Label>
+                    <Form.Control type="text" id="TptLahir" name="birthPlace" value={formData.birthPlace} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Jenis Kelamin</Form.Label>
+                    <div>
+                      <Form.Check inline label="Laki-laki" name="gender" value={"laki-laki"} checked={formData.gender === "laki-laki"} type="radio" id="radioLaki" disabled />
+                      <Form.Check inline label="Perempuan" name="gender" type="radio" id="radioPerempuan" value={"perempuan"} checked={formData.gender === "perempuan"} disabled />
+                    </div>
                   </Form.Group>
                 </Col>
-                <Col lg={6} md={12} sm={12}>
+                <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="email">Email address</Form.Label>
-                    <Form.Control
-                      type="email"
-                      id="email"
-                      value={data.email}
-                      placeholder="Masukkan email Anda"
-                      onChange={handleChange}
-                    />
+                    <Form.Label htmlFor="NIK">NIK</Form.Label>
+                    <Form.Control type="text" id="NIK" name="nik" value={formData.nik} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="NoHP">No. HP</Form.Label>
+                    <Form.Control type="number" id="NoHP" name="phoneNumber" value={formData.phoneNumber} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="TglLahir">Tanggal Lahir</Form.Label>
+                    <Form.Control type="text" id="TglLahir" name="birthDate" value={formatDate(formData.birthDate)} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="country">Kewarganegaraan</Form.Label>
+                    <Form.Control type="text" id="country" name="nationality" value={formData.nationality} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="Address">Alamat Lengkap</Form.Label>
+                    <Form.Control type="text" id="Address" name="address" value={formData.address} disabled />
                   </Form.Group>
                 </Col>
               </Row>
+          </Container>
+
+          <Row className="mt-5">
+            <h2 className="text-center fw-bold">Data Orang Tua</h2>
+          </Row>
+
+          <Row>
+            <h4 className="text-start fw-bold">1. Ayah</h4>
+          </Row>
+          <Container className="mt-3">
               <Row>
-                <Col lg={6} md={12} sm={12}>
+                <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="jenis-kelamin">
-                      Jenis kelamin
-                    </Form.Label>
-                    <Form.Select
-                      id="jenisKelamin"
-                      value={data.jenisKelamin}
-                      onChange={handleChange}
-                    >
-                      <option value="pria">Pria</option>
-                      <option value="wanita">Wanita</option>
+                    <Form.Label htmlFor="NIKAyah">NIK</Form.Label>
+                    <Form.Control type="text" id="NIKAyah" name="fatherNik" value={formData.fatherNik} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="OtglLahirAyah">Tanggal Lahir</Form.Label>
+                    <Form.Control type="text" id="OtglLahirAyah" name="fatherBirthdate" value={formatDate(formData.fatherBirthdate)} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="EducationAyah">Pendidikan</Form.Label>
+                    <Form.Select id="EducationAyah" name="fatherEducation" value={formData.fatherEducation} disabled>
+                      <option value="SD">Sekolah Dasar (SD)</option>
+                      <option value="SMP">Sekolah Menengah Pertama (SMP)</option>
+                      <option value="SMA/SMK">Sekolah Menengah Atas/Kejuruan (SMA/SMK)</option>
+                      <option value="S1">Strata 1 (S1)</option>
+                      <option value="S2">Strata 2 (S2)</option>
+                      <option value="S3">Strata 3 (S3)</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col lg={6} md={12} sm={12}>
+                <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="no-tlp">No telepon</Form.Label>
-                    <Form.Control
-                      type="text"
-                      id="noHp"
-                      value={data.noHp}
-                      placeholder="Masukkan no telepon Anda"
-                      onChange={handleChange}
-                    />
+                    <Form.Label htmlFor="NameAyah">Nama Ayah</Form.Label>
+                    <Form.Control type="text" id="NameAyah" name="fatherName" value={formData.fatherName} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="JobsAyah">Pekerjaan</Form.Label>
+                    <Form.Control type="text" id="JobsAyah" name="fatherOccupation" value={formData.fatherOccupation} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="PenghasilanAyah">Penghasilan</Form.Label>
+                    <Form.Select id="PenghasilanAyah" name="fatherSalary" value={formData.fatherSalary} disabled>
+                      <option value="below1M">Di bawah 1 juta</option>
+                      <option value="1M-3M">1 juta - 3 juta</option>
+                      <option value="3M-5M">3 juta - 5 juta</option>
+                      <option value="above5M">Di atas 5 juta</option>
+                    </Form.Select>
                   </Form.Group>
                 </Col>
               </Row>
+          </Container>
+
+          <Row className="mt-5">
+            <h4 className="text-start fw-bold">2. Ibu</h4>
+          </Row>
+          <Container className="mt-3">
               <Row>
-                <Col>
+                <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label htmlFor="bio">Bio</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={3}
-                      id="bio"
-                      placeholder="Tuliskan bio Anda"
-                      value={data.bio}
-                      onChange={handleChange}
-                    />
+                    <Form.Label htmlFor="NIKIbu">NIK</Form.Label>
+                    <Form.Control type="text" id="NIKIbu" name="motherNik" value={formData.motherNik} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="OtglLahirIbu">Tanggal Lahir</Form.Label>
+                    <Form.Control type="text" id="OtglLahirIbu" name="motherBirthdate" value={formatDate(formData.motherBirthdate)} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="EducationIbu">Pendidikan</Form.Label>
+                    <Form.Select id="EducationIbu" name="motherEducation" value={formData.motherEducation} disabled>
+                      <option value="SD">Sekolah Dasar (SD)</option>
+                      <option value="SMP">Sekolah Menengah Pertama (SMP)</option>
+                      <option value="SMA/SMK">Sekolah Menengah Atas/Kejuruan (SMA/SMK)</option>
+                      <option value="S1">Strata 1 (S1)</option>
+                      <option value="S2">Strata 2 (S2)</option>
+                      <option value="S3">Strata 3 (S3)</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="NameIbu">Nama Ibu</Form.Label>
+                    <Form.Control type="text" id="NameIbu" name="motherName" value={formData.motherName} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="JobsIbu">Pekerjaan</Form.Label>
+                    <Form.Control type="text" id="JobsIbu" name="motherOccupation" value={formData.motherOccupation} disabled />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="PenghasilanIbu">Penghasilan</Form.Label>
+                    <Form.Select id="PenghasilanIbu" name="motherSalary" value={formData.motherSalary} disabled>
+                      <option value="below1M">Di bawah 1 juta</option>
+                      <option value="1M-3M">1 juta - 3 juta</option>
+                      <option value="3M-5M">3 juta - 5 juta</option>
+                      <option value="above5M">Di atas 5 juta</option>
+                    </Form.Select>
                   </Form.Group>
                 </Col>
               </Row>
-
-              <Row className="justify-content-center">
-                <Col>
-                  <div className="d-flex justify-content-center">
-                    <Button
-                      type="submit"
-                      className="btn btn-light bgWarna text-white"
-                      id={styles.bgupdateProfile}
-                    >
-                      Update Profile
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-            </Form>
           </Container>
-          <h3 className="text-center mt-5 mb-3">Bookmark Buku</h3>
-          {/* {console.log(dataBooks[0].data)} */}
-
-          <Container
-            className="mt-5 px-5 py-2"
-            style={{ backgroundColor: "#81CDE5" }}
-          >
-            <div className="scroll-video row row-cols-1 row-cols-lg-4 row-cols-md-3 g-lg-4 overflow-x-auto d-flex flex-nowrap mt-1 mt-lg-0 mb-2">
-              {dataBooks.length === 0 ? (
-                <div className="w-100 text-center">
-                  <p style={{ color: 'white', fontWeight: 'bold' }}>Tidak ada buku.</p>
-                </div>
-              ) : (
-                dataBooks.map((item) => (
-                  <CardBuku key={item.data._id} book={item.data} />
-                ))
-              )}
-            </div>
-          </Container>
-          <h3 className="text-center mt-5 mb-3">Bookmark Video</h3>
-          <Container
-            className="mt-5 px-5 py-2"
-            style={{ backgroundColor: "#81CDE5" }}
-          >
-            <div className="scroll-video row row-cols-1 row-cols-lg-4 row-cols-md-3 g-lg-4 overflow-x-auto d-flex flex-nowrap mt-1 mt-lg-0 mb-2">
-              {dataVideos.length === 0 ? (
-                <div className="w-100 text-center">
-                  <p style={{ color: 'white', fontWeight: 'bold' }}>Tidak ada video.</p>
-                </div>
-              ) : (
-                dataVideos.map((item) => (
-                  <CardVideo key={item.data._id} item={item.data} />
-                ))
-              )}
-            </div>
-          </Container>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
         </Container>
       </div>
     </>

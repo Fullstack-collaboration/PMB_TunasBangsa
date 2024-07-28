@@ -36,7 +36,7 @@ function Login() {
     }
 
     try {
-      const {data} = await axios.post(`https://pmb-backend.vercel.app/login`, login);
+      const {data} = await axios.post(`https://pmb-backend.vercel.app/admin/login`, login);
 
       console.log(data)
 
@@ -61,7 +61,7 @@ function Login() {
       // Redirect the user to another page (you can replace '/dashboard' with the desired path)
       toast.success("Anda berhasil login");
       setTimeout(() => {
-        navigate("/");
+        navigate("/admin");
       }, 2000);
     } catch (error) {
       console.log(error);
@@ -88,22 +88,13 @@ function Login() {
             alt="Ellipse Background"
           />
           <Row className="align-items-center">
-            <Col lg={5} md={12} className="">
-              <h1 className="text-center text-lg-start fw-bold">
-                Masuk untuk Menikmati fitur kami
-              </h1>
-              <p className="fw-medium mt-4 font-20 text-center text-lg-start">
-                jika Anda belum memiliki akun,
-                <br />
-                Anda dapat
-                <Link
-                  to="/register"
-                  className="btn btn-link text-decoration-none fw-bold font-20 position-relative z-index-1"
-                  id={styles.textWarna}
-                >
-                  Daftar di sini!
-                </Link>
-              </p>
+          <Col lg={5} md={12}>
+                <h1 className="text-center text-lg-start fw-bold">
+                Masuk untuk Mengakses Fitur Admin
+                </h1>
+                <p className="fw-medium mt-4 font-20 text-center text-lg-start">
+                Jika Anda belum memiliki akun admin, silakan hubungi administrator untuk mendapatkan akses.
+                </p>
             </Col>
             <Col
               lg={4}
