@@ -1,4 +1,5 @@
 import axios from "axios"
+import { set } from "date-fns";
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
@@ -37,12 +38,17 @@ const Berkas = () => {
                     "Content-Type" : "multipart/form-data"
                 }
             })
-        toast.success("Berkas berhasil diupload");
-        navigate("/"); // Redirect to homepage on success
+            toast.success("Berkas berhasil diupload");
+            setTimeout(() => {
+            navigate("/"); // Redirect to homepage on success
+            }, 1500);
         } catch (error) {
         toast.error("Terjadi kesalahan. Coba lagi.");
         }
     }
+
+    // check if document true or false
+    
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("data"))
@@ -57,6 +63,15 @@ const Berkas = () => {
           ...prevFormData,
           userId: parseInt(user.id)
         }))
+
+        if(user.document && user.document.sktl && user.document.ijazah && user.document.kartukeluarga) {
+            toast.error("Anda sudah mengupload berkas")
+            setTimeout(() => {
+                navigate("/status")
+            }
+            , 1500)
+        //   navigate("/status")
+        }
       }
         console.log(formData.userId)
       }, [])
