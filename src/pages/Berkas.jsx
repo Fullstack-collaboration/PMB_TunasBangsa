@@ -37,7 +37,14 @@ const Berkas = () => {
         } catch (error) {
             console.log(error)
         }
+      });
+      toast.success("Berkas berhasil diupload");
+      navigate("/"); // Redirect to homepage on success
+    } catch (error) {
+      toast.error("Terjadi kesalahan. Coba lagi.");
     }
+  };
+
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("data"))
@@ -50,6 +57,7 @@ const Berkas = () => {
 
     return (
         <>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
             <div className="container">
                 <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -99,8 +107,11 @@ const Berkas = () => {
                     </div>
                 </form>
             </div>
-        </>
-    )
-}
+          </div>
+        </form>
+      </div>
+    </>
+  );
+};
 
-export default Berkas
+export default Berkas;

@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisData() {
@@ -36,6 +37,31 @@ export default function RegisData() {
   })
 
   const [receipt, setReceipt] = useState(null)
+  const [biodataExists, setBiodataExists] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("data"));
+    if (user) {
+      const userId = parseInt(user.id);
+      setFormData((prevFormData) => ({ ...prevFormData, userId }));
+
+// Check if biodata already exists
+axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
+.then(response => { 
+  console.log(response.data); // Log the biodata response
+  if (response.data.user.biodata) {
+        setBiodataExists(true);
+            toast.info("Kamu sudah mengisi biodata.");
+            navigate("/"); // Redirect to homepage if biodata exists
+        }
+      })
+      .catch(error => {
+        console.error("Error checking biodata:", error);
+      });
+      }
+      }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -71,14 +97,12 @@ export default function RegisData() {
           "Content-Type": "multipart/form-data"
         }
       })
-      console.log(response.data)
-      console.log("Data berhasil diinput")
-      console.log(response)
+      toast.success("Data berhasil diinput");
+      navigate("/berkas"); // Redirect to the next page on success
     } catch (error) {
-      console.log(error)
+      toast.error("Terjadi kesalahan. Coba lagi.");
     }
-    
-  }
+  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("data"))
@@ -88,6 +112,11 @@ export default function RegisData() {
     }))
     console.log(formData.userId)
   }, [])
+
+     // If biodata exists, render nothing to prevent access
+     if (biodataExists) {
+      return null;
+    }
 
   return (
     <>
@@ -309,7 +338,7 @@ export default function RegisData() {
                       <option value="">Pilih Waktu</option>
                       <option value="below1M">08.00 WIB (Pagi)</option>
                       <option value="1M-3M">14.00 WIB (Siang)</option>
-                      <option value="3M-5M">(Malam)</option>
+                      <option value="3M-5M">18.00 WIB (Malam)</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
