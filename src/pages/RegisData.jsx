@@ -4,6 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import Swal from 'sweetalert2'
 
 export default function RegisData() {
 
@@ -176,8 +177,14 @@ export default function RegisData() {
           const response = await axios.get(`https://pmb-backend.vercel.app/user/${userId}`);
           if (response.data.user.biodata) {
             setBiodataExists(true)
-            toast.info("Kamu sudah mengisi biodata.")
-            alert("Kamu sudah mengisi biodata.")
+            // toast.error("Kamu sudah mengisi biodata.")
+            Swal.fire({
+              title: 'Biodata sudah diisi',
+              text: 'Kamu akan di arahkan ke halaman status',
+              icon: 'warning',
+              confirmButtonText: 'Ok'
+            })
+            // alert("Kamu sudah mengisi biodata.")
             setTimeout(() => {
               navigate("/status"); // Redirect to the status page if biodata exists
             }, 1500);
@@ -452,10 +459,10 @@ export default function RegisData() {
                     <Form.Label htmlFor="program">Jenjang dan Prodi</Form.Label>
                     <Form.Select id="program"  name="department" value={formData.department} onChange={handleChange} required >
                       <option value="">Pilih Jenjang dan Prodi</option>
-                      <option value="SI">Sistem Informasi (S1)</option>
-                      <option value="TI">Teknik Informatika (S1)</option>
-                      <option value="MI">Manajemen Informatika(D3)</option>
-                      <option value="KA">Komputerisasi Akuntansi</option>
+                      <option value="Teknik Informatika (S1)">Teknik Informatika (S1)</option>
+                      <option value="Sistem Informasi (S1)">Sistem Informasi (S1)</option>
+                      <option value="Manajemen Informatika(D3)">Manajemen Informatika(D3)</option>
+                      <option value="Komputerisasi Akuntansi (D3)">Komputerisasi Akuntansi (D3)</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -470,9 +477,9 @@ export default function RegisData() {
                     <Form.Label htmlFor="timeOption">Pilihan Waktu</Form.Label>
                     <Form.Select id="timeOption"  name="departmentTime" value={formData.departmentTime} onChange={handleChange} required >
                       <option value="">Pilih Waktu</option>
-                      <option value="below1M">08.00 WIB (Pagi)</option>
-                      <option value="1M-3M">14.00 WIB (Siang)</option>
-                      <option value="3M-5M">18.00 WIB (Malam)</option>
+                      <option value="08.00 WIB (Pagi)">08.00 WIB (Pagi)</option>
+                      <option value="14.00 WIB (Siang)">14.00 WIB (Siang)</option>
+                      <option value="18.00 WIB">18.00 WIB (Malam)</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -482,9 +489,9 @@ export default function RegisData() {
                     <Form.Label htmlFor="paymentStatus">Status Pembayaran</Form.Label>
                     <Form.Select id="paymentStatus"  name="status" value={formData.status} onChange={handleChange} required >
                       <option value="">Pilih Status Pembayaran</option>
-                      <option value="belum_bayar">Belum Bayar</option>
-                      <option value="uang_pendaftaran">Uang Pendaftaran | Rp 200.000</option>
-                      <option value="pendaftaranCicilan">Uang Pendaftaran + Cicilan Pertama</option>
+                      <option value="Belum Bayar">Belum Bayar</option>
+                      <option value="Uang Pendaftaran  (Rp 200.000)">Uang Pendaftaran | Rp 200.000</option>
+                      <option value="Uang Pendaftaran + Cicilan Pertama">Uang Pendaftaran + Cicilan Pertama</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -494,6 +501,7 @@ export default function RegisData() {
                     <div className="input-group mb-3">
                       <input type="file" className="form-control" id="fileUpload" name="receipt" onChange={handleFileChange}  />
                     </div>
+                      <p className="text-danger">**Harap Upload file gambar (jpg, jpeg, png)</p>
                   </Form.Group>
                 </Col>
               </Row>

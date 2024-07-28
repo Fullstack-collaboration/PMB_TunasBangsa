@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 export default function ViewData() {
   const [formData, setFormData] = useState(null);
+  const [documents, setDocuments] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,9 +15,13 @@ export default function ViewData() {
       const userId = parseInt(user.id);
       axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
         .then(response => {
+          console.log(response.data.user.documents);
           if (response.data.user.biodata) {
             setFormData(response.data.user.biodata);
-          } else {
+          // } else if (response.data.user.documents) {
+            setDocuments(response.data.user.documents);
+          } 
+          else {
             toast.info("Kamu belum mengisi biodata.");
             navigate("/regisdata");
           }
@@ -26,6 +31,8 @@ export default function ViewData() {
         });
     }
   }, [navigate]);
+
+  
 
 
   const formatDate = (dateString) => {
@@ -39,6 +46,9 @@ export default function ViewData() {
   if (!formData) {
     return <p>Loading...</p>;
   }
+
+  console.log(formData)
+  console.log(documents)
 
 
   return (
@@ -194,6 +204,104 @@ export default function ViewData() {
                   </Form.Group>
                 </Col>
               </Row>
+          </Container>
+
+          <Container className="mt-3">
+            {/* <Form> */}
+              <Row>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="schoolName">Nama Sekolah</Form.Label>
+                    <Form.Control type="text" id="schoolName"  name="schoolOrigin" value={formData.schoolOrigin}  disabled />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="yearGraduate">Tahun Tamat</Form.Label>
+                    <Form.Control type="text" id="yearGraduate"  name="schoolGraduateYear" value={formData.schoolGraduateYear}  disabled />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="schoolAddress">Alamat Sekolah</Form.Label>
+                    <Form.Control type="text" id="schoolAddress"  name="schoolOriginAddress" value={formData.schoolOriginAddress}  disabled />
+                  </Form.Group>
+                </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="program">Jenjang dan Prodi</Form.Label>
+                    <Form.Control type="text" id="department"  name="department" value={formData.department}  disabled />
+                    {/* <Form.Select id="program"  name="department" value={formData.department}  disabled >
+                      <option value="">Pilih Jenjang dan Prodi</option>
+                      <option value="Teknik Informatika (S1)">Teknik Informatika (S1)</option>
+                      <option value="Sistem Informasi (S1)">Sistem Informasi (S1)</option>
+                      <option value="Manajemen Informatika(D3)">Manajemen Informatika(D3)</option>
+                      <option value="Komputerisasi Akuntansi (D3)">Komputerisasi Akuntansi (D3)</option>
+                    </Form.Select> */}
+                  </Form.Group>
+                </Col>
+                {/* <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="status">Status</Form.Label>
+                    <Form.Control type="text" id="status" />
+                  </Form.Group>
+                </Col> */}
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="timeOption">Pilihan Waktu</Form.Label>
+                    <Form.Control type="text" id="departmentTime"  name="departmentTime" value={formData.departmentTime}  disabled />
+                    {/* <Form.Select id="timeOption"  name="departmentTime" value={formData.departmentTime}  disabled >
+                      <option value="">Pilih Waktu</option>
+                      <option value="08.00 WIB (Pagi)">08.00 WIB (Pagi)</option>
+                      <option value="14.00 WIB (Siang)">14.00 WIB (Siang)</option>
+                      <option value="18.00 WIB">18.00 WIB (Malam)</option>
+                    </Form.Select> */}
+                  </Form.Group>
+                </Col>
+                <Col md={6}> </Col>
+                <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="paymentStatus">Status Pembayaran</Form.Label>
+                    <Form.Control type="text" id="status"  name="status" value={formData.status}  disabled />
+                    {/* <Form.Select id="paymentStatus"  name="status" value={formData.status}  disabled >
+                      <option value="">Pilih Status Pembayaran</option>
+                      <option value="Belum Bayar">Belum Bayar</option>
+                      <option value="Uang Pendaftaran  (Rp 200.000)">Uang Pendaftaran | Rp 200.000</option>
+                      <option value="Uang Pendaftaran + Cicilan Pertama">Uang Pendaftaran + Cicilan Pertama</option>
+                    </Form.Select> */}
+                  </Form.Group>
+                </Col>
+                {/* <Col md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="fileUpload">Bukti Pembayaran</Form.Label>
+                    <div className="input-group mb-3">
+                      <input type="file" className="form-control" id="fileUpload" name="receipt"   />
+                    </div>
+                  </Form.Group>
+                </Col> */}
+              </Row>
+
+            {/* </Form> */}
+          </Container>
+          <Container className="mt-3">
+            <div className="row">
+              <div className="col">
+                <h5>Ktp</h5>
+                <img src={documents.ktp} alt="ktp" width={200} />
+              </div>
+              <div className="col">
+                <h5>sktl</h5>
+                <img src={documents.sktl} alt="sktl" width={200} />
+              </div>
+              <div className="col">
+                <h5>ijazah</h5>
+                <img src={documents.ijazah} alt="ijazah" width={200} />
+              </div>
+              <div className="col">
+                <h5>Kartu Keluarga</h5>
+                <img src={documents.kartukeluarga} alt="kartukeluarga" width={200} />
+              </div>
+            </div>
           </Container>
         </Container>
       </div>

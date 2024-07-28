@@ -77,7 +77,7 @@ const Berkas = () => {
             try {
                 const response = await axios.get(`https://pmb-backend.vercel.app/user/${formData.userId}`);
                 console.log(response)
-                  if (response.data.user.document) {
+                  if (response.data.user.documents) {
                     // setBiodataExists(true)
                     toast.info("Kamu sudah mengupload berkas.")
                     setTimeout(() => {
@@ -121,8 +121,10 @@ const Berkas = () => {
                         </div>
                     </div>
                     <div className="row">
+                        
                         <div className="col-lg-8 mx-auto">
                             <div class="mb-3">
+                                
                                 <label htmlFor="sktl" class="form-label">SKTL</label>
                                 <input class="form-control" type="file" id="sktl" name="sktl" onChange={handleFileChange} />
                             </div>
@@ -149,6 +151,7 @@ const Berkas = () => {
                             <div class="mb-3">
                                 <label htmlFor="kartukeluarga" class="form-label">kartukeluarga</label>
                                 <input class="form-control" type="file" id="kartukeluarga" name="kartukeluarga" onChange={handleFileChange} />
+                                <p className="text-danger">**Harap Upload file gambar (jpg, jpeg, png)</p>
                             </div>
                         </div>
                     </div>
