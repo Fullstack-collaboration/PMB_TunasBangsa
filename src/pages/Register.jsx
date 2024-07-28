@@ -53,7 +53,7 @@ export default function Register() {
       // kalo semua inputan sudah oke maka
       try {
         //
-        const data = await axios.post(`http://localhost:3003/register`, formData);
+        const data = await axios.post(`https://pmb-backend.vercel.app/register`, formData);
         toast.success(
           "Pendaftaran berhasil! Anda akan diarahkan ke halaman login dalam 2 detik."
         );
