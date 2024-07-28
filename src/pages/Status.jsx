@@ -16,9 +16,13 @@ export default function Status() {
     const fetchBiodata = async () => {
       const user = JSON.parse(localStorage.getItem("data"));
       if (!user) {
-        toast.error("User ID tidak ditemukan.");
+        toast.error("User ID tidak ditemukan. Silakan login terlebih dahulu.");
+        // delay 2 detik dan navigasi ke login 
+        setTimeout(() => {
+          navigate("/login");
+          return;
+        }, 2000);
         setStatus("failure");
-        return;
       }
 
       const userId = parseInt(user.id);

@@ -7,6 +7,130 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisData() {
 
+  // const [formData, setFormData] = useState({
+  //   userId: 0,
+  //   fullName: "",
+  //   nisn: "",
+  //   phoneNumber: "",
+  //   nik: "",
+  //   birthDate: "",
+  //   nationality: "",
+  //   address: "",
+  //   fatherName: "",
+  //   fatherNik: "",
+  //   fatherOccupation: "",
+  //   fatherEducation: "",
+  //   fatherSalary: "",
+  //   fatherBirthdate: "",
+  //   motherName: "",
+  //   motherNik: "",
+  //   motherBirthdate: "",
+  //   motherEducation: "",
+  //   motherOccupation: "",
+  //   motherSalary: "",
+  //   schoolOrigin: "",
+  //   schoolGraduateYear: "",
+  //   schoolOriginAddress: "",
+  //   department: "",
+  //   departmentTime: "",
+  //   status: "",
+  // })
+
+  // const [receipt, setReceipt] = useState(null)
+  // const [biodataExists, setBiodataExists] = useState(false);
+
+  // const navigate = useNavigate();
+
+  // useEffect(async () => {
+  //   const user = JSON.parse(localStorage.getItem("data"));
+  //   if (user) {
+  //     const userId = parseInt(user.id);
+  //     setFormData((prevFormData) => ({ ...prevFormData, userId }));
+
+  //   // Check if biodata already exists
+  //   axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
+  //   .then(response => { 
+  //     console.log(response.data); // Log the biodata response
+  //     if (response.data.user.biodata) {
+  //       setBiodataExists(true);
+  //           toast.info("Kamu sudah mengisi biodata.");
+  //           // delay 2 detik
+  //           setTimeout(() => {
+  //             // navigate("/berkas")
+  //             navigate("/status"); // Redirect to homepage if biodata exists
+  //           }, 1500)
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error("Error checking biodata:", error);
+  //     });
+  //     }
+  // }, [navigate]);
+
+  // const handleChange = (e) => {
+  //   setFormData({
+  //     ...formData,
+  //     [e.target.name]: e.target.value
+  //   })
+  //   console.log(formData.gender)
+  //   console.log(`${formData[e.target.name]} : ${e.target.value}`)
+  // }
+
+  // const handleFileChange = (e) => {
+  //   setReceipt(e.target.files[0])
+  // }
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
+
+  //   const form = new FormData()
+
+  //   for (const key in formData) {
+  //     form.append(key, formData[key])
+  //   }
+
+  //   if (receipt) {
+  //     form.append("receipt", receipt)
+  //   }
+
+  //   console.log(form)
+
+  //   try {
+  //     const response = await axios.post("https://pmb-backend.vercel.app/biodata", form, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data"
+  //       }
+  //     })
+  //     toast.success("Data berhasil diinput");
+  //     navigate("/berkas"); // Redirect to the next page on success
+  //   } catch (error) {
+  //     toast.error("Terjadi kesalahan. Coba lagi.");
+  //   }
+  // };
+
+  // useEffect( () => {
+  //   const user = JSON.parse(localStorage.getItem("data"))
+  //   if(!user) {
+  //     toast.error("Anda harus login terlebih dahulu")
+  //     // delay 2 detik
+  //     setTimeout(() => {
+  //       navigate("/login")
+  //     }, 1500)
+  //     // navigate("/login")
+  //   } else {
+  //   setFormData((prevFormData) => ({
+  //     ...prevFormData,
+  //     userId: parseInt(user.id)
+  //   }))
+  // }
+  //   // console.log(formData.userId)
+  // }, [])
+
+  //    // If biodata exists, render nothing to prevent access
+  //    if (biodataExists) {
+  //     return null;
+  //   }
+
   const [formData, setFormData] = useState({
     userId: 0,
     fullName: "",
@@ -34,69 +158,67 @@ export default function RegisData() {
     department: "",
     departmentTime: "",
     status: "",
-  })
+  });
 
-  const [receipt, setReceipt] = useState(null)
+  const [receipt, setReceipt] = useState(null);
   const [biodataExists, setBiodataExists] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("data"));
-    if (user) {
-      const userId = parseInt(user.id);
-      setFormData((prevFormData) => ({ ...prevFormData, userId }));
+    const checkBiodata = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("data"));
+        if (user) {
+          const userId = parseInt(user.id);
+          setFormData((prevFormData) => ({ ...prevFormData, userId }));
 
-// Check if biodata already exists
-axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
-.then(response => { 
-  console.log(response.data); // Log the biodata response
-  if (response.data.user.biodata) {
-        setBiodataExists(true);
-            toast.info("Kamu sudah mengisi biodata.");
-            navigate("/"); // Redirect to homepage if biodata exists
+          // Check if biodata already exists
+          const response = await axios.get(`https://pmb-backend.vercel.app/user/${userId}`);
+          if (response.data.user.biodata) {
+            setBiodataExists(true)
+            toast.info("Kamu sudah mengisi biodata.")
+            setTimeout(() => {
+              navigate("/status"); // Redirect to the status page if biodata exists
+            }, 1500);
+          }
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error("Error checking biodata:", error);
-      });
       }
-      }, [navigate]);
+    };
+    checkBiodata();
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-    console.log(formData.gender)
-    console.log(`${formData[e.target.name]} : ${e.target.value}`)
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleFileChange = (e) => {
-    setReceipt(e.target.files[0])
-  }
+    setReceipt(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const form = new FormData()
+    const form = new FormData();
 
     for (const key in formData) {
-      form.append(key, formData[key])
+      form.append(key, formData[key]);
     }
 
     if (receipt) {
-      form.append("receipt", receipt)
+      form.append("receipt", receipt);
     }
-
-    console.log(form)
 
     try {
       const response = await axios.post("https://pmb-backend.vercel.app/biodata", form, {
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      })
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success("Data berhasil diinput");
       navigate("/berkas"); // Redirect to the next page on success
     } catch (error) {
@@ -105,21 +227,32 @@ axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("data"))
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      userId: parseInt(user.id)
-    }))
-    console.log(formData.userId)
-  }, [])
+    const checkLogin = async () => {
+      const user = JSON.parse(localStorage.getItem("data"));
+      if (!user) {
+        toast.error("Anda harus login terlebih dahulu");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          userId: parseInt(user.id),
+        }));
+      }
+    };
+    checkLogin();
+  }, [navigate]);
 
-     // If biodata exists, render nothing to prevent access
-     if (biodataExists) {
-      return null;
-    }
+  // If biodata exists, render nothing to prevent access
+  if (biodataExists) {
+    return null;
+  }
 
   return (
     <>
+    {/* <ToastContainer /> */}
+    <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
       <form onSubmit={handleSubmit}>
       <div className="halaman-profile">
         <Container className="mt-5">

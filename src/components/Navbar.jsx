@@ -141,12 +141,12 @@ function NavbarComponent() {
                   className="nav-item mt-2 text-center font-general"
                   id="register"
                 >
-                  <Nav.Link
+                  <NavLink
                     className="btn btn-link text-decoration-none text-primary fw-bold"
-                    href="/register"
+                    to="/register"
                   >
                     <Button className="fw-bold">Daftar</Button>
-                  </Nav.Link>
+                  </NavLink>
                 </Nav.Item>
               </>
             )}
