@@ -1,36 +1,36 @@
-import axios from "axios"
-import { set } from "date-fns";
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router";
-import { ToastContainer, toast } from "react-toastify";
+
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 const Berkas = () => {
-    const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    userId: 0,
+    sktl: "",
+    ktp: "",
+    ijazah: "",
+    kartukeluarga: ""
+  });
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        userId: 0,
-        sktl: "",
-        ktp: "",
-        ijazah: "",
-        kartukeluarga: ""
-    })
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.files[0]
+    });
+    console.log(formData);
+  };
 
-    const handleFileChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.files[0]
-        })
-        console.log(formData)
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const data = new FormData()
-        data.append("userId", formData.userId)
-        data.append("sktl", formData.sktl)
-        data.append("ktp", formData.ktp)
-        data.append("ijazah", formData.ijazah)
-        data.append("kartukeluarga", formData.kartukeluarga)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append("userId", formData.userId);
+    data.append("sktl", formData.sktl);
+    data.append("ktp", formData.ktp);
+    data.append("ijazah", formData.ijazah);
+    data.append("kartukeluarga", formData.kartukeluarga);
 
         try {
             const response = await axios.post("https://pmb-backend.vercel.app/document", data, {
@@ -46,7 +46,7 @@ const Berkas = () => {
         toast.error("Terjadi kesalahan. Coba lagi.");
         }
     }
-
+  
     // check if document true or false
     
 

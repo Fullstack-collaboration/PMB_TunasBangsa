@@ -5,6 +5,7 @@ import DashboardAdmin from "./pages/DashboardAdmin";
 import Footer from "./components/Footer";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
 import ResetPassword from "./pages/ResetPassword";
 import ProfileUser from "./pages/ProfileUser";
 import RegisData from "./pages/RegisData";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/admin" element={<DashboardAdmin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/profile" element={<ProfileUser />} />
         <Route path="/biodata" element={<RegisData />} />
