@@ -284,20 +284,20 @@ export default function ViewData() {
             {/* </Form> */}
           </Container>
           <Container className="mt-3">
-            <div className="row">
-              <div className="col">
+            <div className="row mx-auto">
+              <div className="col mx-auto">
                 <h5>Ktp</h5>
                 <img src={documents.ktp} alt="ktp" width={200} />
               </div>
-              <div className="col">
+              <div className="col mx-auto">
                 <h5>sktl</h5>
                 <img src={documents.sktl} alt="sktl" width={200} />
               </div>
-              <div className="col">
+              <div className="col mx-auto">
                 <h5>ijazah</h5>
                 <img src={documents.ijazah} alt="ijazah" width={200} />
               </div>
-              <div className="col">
+              <div className="col mx-auto">
                 <h5>Kartu Keluarga</h5>
                 <img src={documents.kartukeluarga} alt="kartukeluarga" width={200} />
               </div>
