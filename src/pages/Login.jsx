@@ -30,40 +30,33 @@ function Login() {
     e.preventDefault();
     // console.log(login);
     const { email, password } = login;
+
     if (!email || !password) {
       alert("Silahkan isi email dan password");
     }
 
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_APP_LINK_API}/auth/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const {data} = await axios.post(`http://localhost:3003/login`, login);
+
+      console.log(data)
+
       const {
-        token,
-        role,
-        nama,
-        jenisKelamin,
-        _id,
-        email: userEmail,
-        profileImage,
-        bio,
-        noHp,
-      } = data;
+        name,
+        id,
+        avatar,
+        email,
+        gender,
+      } = data.user;
+
       const userData = {
-        token,
-        role,
-        nama,
-        jenisKelamin,
-        email: userEmail,
-        profileImage,
-        bio,
-        noHp,
-        _id,
+        name,
+        id,
+        avatar,
+        email,
+        gender,
       };
+
+      console.log(userData)
       localStorage.setItem("data", JSON.stringify(userData));
       // Redirect the user to another page (you can replace '/dashboard' with the desired path)
       toast.success("Anda berhasil login");
@@ -71,6 +64,7 @@ function Login() {
         navigate("/");
       }, 2000);
     } catch (error) {
+      console.log(error);
       toast.error("Login gagal. Periksa kembali email dan password");
     }
   };

@@ -10,61 +10,145 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function RegisData() {
 
+  const [formData, setFormData] = useState({
+    userId: 0,
+    fullName: "",
+    nisn: "",
+    phoneNumber: "",
+    nik: "",
+    birthDate: "",
+    nationality: "",
+    address: "",
+    fatherName: "",
+    fatherNik: "",
+    fatherOccupation: "",
+    fatherEducation: "",
+    fatherSalary: "",
+    fatherBirthdate: "",
+    motherName: "",
+    motherNik: "",
+    motherBirthdate: "",
+    motherEducation: "",
+    motherOccupation: "",
+    motherSalary: "",
+    schoolOrigin: "",
+    schoolGraduateYear: "",
+    schoolOriginAddress: "",
+    department: "",
+    departmentTime: "",
+    status: "",
+  })
+
+  const [receipt, setReceipt] = useState(null)
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+    console.log(formData.gender)
+    console.log(`${formData[e.target.name]} : ${e.target.value}`)
+  }
+
+  const handleFileChange = (e) => {
+    setReceipt(e.target.files[0])
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const form = new FormData()
+
+    for (const key in formData) {
+      form.append(key, formData[key])
+    }
+
+    if (receipt) {
+      form.append("receipt", receipt)
+    }
+
+    console.log(form)
+
+    try {
+      const response = await axios.post("https://pmb-backend.vercel.app/biodata", form, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      console.log(response.data)
+      console.log("Data berhasil diinput")
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+    
+  }
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("data"))
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      userId: parseInt(user.id)
+    }))
+    console.log(formData.userId)
+  }, [])
+
   return (
     <>
+      <form onSubmit={handleSubmit}>
       <div className="halaman-profile">
         <Container className="mt-5">
           <Row>
             <h2 className="text-center fw-bold">Data Diri</h2>
           </Row>
           <Container className="mt-5">
-            <Form>
+            {/* <Form onSubmit={handleSubmit}> */}
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="Nisn">NISN</Form.Label>
-                    <Form.Control type="text" id="Nisn" />
+                    <Form.Control type="text" name="nisn" onChange={handleChange} id="Nisn" required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="fullname">Nama Lengkap</Form.Label>
-                    <Form.Control type="text" id="fullname" />
+                    <Form.Control type="text" id="fullname" name="fullName" value={formData.fullName} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="TptLahir">Tempat Lahir</Form.Label>
-                    <Form.Control type="text" id="TptLahir" />
+                    <Form.Control type="text" id="TptLahir" name="birthPlace" value={formData.birthPlace} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label>Jenis Kelamin</Form.Label>
                     <div>
-                      <Form.Check inline label="Laki-laki" name="gender" type="radio" id="radioLaki" />
-                      <Form.Check inline label="Perempuan" name="gender" type="radio" id="radioPerempuan" />
+                      <Form.Check inline label="Laki-laki" name="gender" value={"laki-laki"} onChange={handleChange} type="radio" id="radioLaki" required />
+                      <Form.Check inline label="Perempuan" name="gender" type="radio" id="radioPerempuan"  value={"perempuan"} onChange={handleChange} required />
                     </div>
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="NIK">NIK</Form.Label>
-                    <Form.Control type="number" id="NIK" />
+                    <Form.Control type="text" id="NIK" name="nik" value={formData.nik} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="NoHP">No. HP</Form.Label>
-                    <Form.Control type="number" id="NoHP" />
+                    <Form.Control type="number" id="NoHP" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="TglLahir">Tanggal Lahir</Form.Label>
-                    <Form.Control type="date" id="TglLahir" />
+                    <Form.Control type="date" id="TglLahir" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="country">Kewarganegaraan</Form.Label>
-                    <Form.Control type="text" id="country" />
+                    <Form.Control type="text" id="country"  name="nationality" value={formData.nationality} onChange={handleChange}required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="Address">Alamat Lengkap</Form.Label>
-                    <Form.Control type="text" id="Address" />
+                    <Form.Control type="text" id="Address"  name="address" value={formData.address} onChange={handleChange} required  />
                   </Form.Group>
                 </Col>
               </Row>
-            </Form>
+            {/* </Form> */}
           </Container>
 
           <Row className="mt-5">
@@ -75,20 +159,20 @@ export default function RegisData() {
             <h4 className="text-start fw-bold">1. Ayah</h4>
           </Row>
           <Container className="mt-3">
-            <Form>
+            {/* <Form> */}
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="NIKAyah">NIK</Form.Label>
-                    <Form.Control type="text" id="NIKAyah" />
+                    <Form.Control type="text" id="NIKAyah"  name="fatherNik" value={formData.fatherNik} onChange={handleChange} required  />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="OtglLahirAyah">Tanggal Lahir</Form.Label>
-                    <Form.Control type="date" id="OtglLahirAyah" />
+                    <Form.Control type="date" id="OtglLahirAyah"  name="fatherBirthdate" value={formData.fatherBirthdate} onChange={handleChange} required  />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="EducationAyah">Pendidikan</Form.Label>
-                    <Form.Select id="EducationAyah">
+                    <Form.Select id="EducationAyah"  name="fatherEducation" value={formData.fatherEducation} onChange={handleChange} required >
                       <option value="">Pilih Pendidikan</option>
                       <option value="SD">Sekolah Dasar (SD)</option>
                       <option value="SMP">Sekolah Menengah Pertama (SMP)</option>
@@ -102,15 +186,15 @@ export default function RegisData() {
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="NameAyah">Nama Ayah</Form.Label>
-                    <Form.Control type="text" id="NameAyah" />
+                    <Form.Control type="text" id="NameAyah"  name="fatherName" value={formData.fatherName} onChange={handleChange} required  />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="JobsAyah">Pekerjaan</Form.Label>
-                    <Form.Control type="text" id="JobsAyah" />
+                    <Form.Control type="text" id="JobsAyah"  name="fatherOccupation" value={formData.fatherOccupation} onChange={handleChange} required  />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="PenghasilanAyah">Penghasilan</Form.Label>
-                    <Form.Select id="PenghasilanAyah">
+                    <Form.Select id="PenghasilanAyah"  name="fatherSalary" value={formData.fatherSalary} onChange={handleChange} required >
                       <option value="">Pilih Penghasilan</option>
                       <option value="below1M">Di bawah 1 juta</option>
                       <option value="1M-3M">1 juta - 3 juta</option>
@@ -120,27 +204,27 @@ export default function RegisData() {
                   </Form.Group>
                 </Col>
               </Row>
-            </Form>
+            {/* </Form> */}
           </Container>
 
           <Row className="mt-5">
             <h4 className="text-start fw-bold">2. Ibu</h4>
           </Row>
           <Container className="mt-3">
-            <Form>
+            {/* <Form> */}
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="NIKIbu">NIK</Form.Label>
-                    <Form.Control type="text" id="NIKIbu" />
+                    <Form.Control type="text" id="NIKIbu"  name="motherNik" value={formData.motherNik} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="OtglLahirIbu">Tanggal Lahir</Form.Label>
-                    <Form.Control type="date" id="OtglLahirIbu" />
+                    <Form.Control type="date" id="OtglLahirIbu"  name="motherBirthdate" value={formData.motherBirthdate} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="EducationIbu">Pendidikan</Form.Label>
-                    <Form.Select id="EducationIbu">
+                    <Form.Select id="EducationIbu"  name="motherEducation" value={formData.motherEducation} onChange={handleChange} required >
                       <option value="">Pilih Pendidikan</option>
                       <option value="SD">Sekolah Dasar (SD)</option>
                       <option value="SMP">Sekolah Menengah Pertama (SMP)</option>
@@ -154,15 +238,15 @@ export default function RegisData() {
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="NameIbu">Nama Ibu</Form.Label>
-                    <Form.Control type="text" id="NameIbu" />
+                    <Form.Control type="text" id="NameIbu"  name="motherName" value={formData.motherName} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="JobsIbu">Pekerjaan</Form.Label>
-                    <Form.Control type="text" id="JobsIbu" />
+                    <Form.Control type="text" id="JobsIbu"  name="motherOccupation" value={formData.motherOccupation} onChange={handleChange} required />
                   </Form.Group>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="PenghasilanIbu">Penghasilan</Form.Label>
-                    <Form.Select id="PenghasilanIbu">
+                    <Form.Select id="PenghasilanIbu"  name="motherSalary" value={formData.motherSalary} onChange={handleChange} required >
                       <option value="">Pilih Penghasilan</option>
                       <option value="below1M">Di bawah 1 juta</option>
                       <option value="1M-3M">1 juta - 3 juta</option>
@@ -183,30 +267,30 @@ export default function RegisData() {
             <h4 className="text-start fw-bold">Data Asal Sekolah</h4>
           </Row>
           <Container className="mt-3">
-            <Form>
+            {/* <Form> */}
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="schoolName">Nama Sekolah</Form.Label>
-                    <Form.Control type="text" id="schoolName" />
+                    <Form.Control type="text" id="schoolName"  name="schoolOrigin" value={formData.schoolOrigin} onChange={handleChange} required />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="yearGraduate">Tahun Tamat</Form.Label>
-                    <Form.Control type="text" id="yearGraduate" />
+                    <Form.Control type="text" id="yearGraduate"  name="schoolGraduateYear" value={formData.schoolGraduateYear} onChange={handleChange} required />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="schoolAddress">Alamat Sekolah</Form.Label>
-                    <Form.Control type="text" id="schoolAddress" />
+                    <Form.Control type="text" id="schoolAddress"  name="schoolOriginAddress" value={formData.schoolOriginAddress} onChange={handleChange} required />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="program">Jenjang dan Prodi</Form.Label>
-                    <Form.Select id="program">
+                    <Form.Select id="program"  name="department" value={formData.department} onChange={handleChange} required >
                       <option value="">Pilih Jenjang dan Prodi</option>
                       <option value="SI">Sistem Informasi (S1)</option>
                       <option value="TI">Teknik Informatika (S1)</option>
@@ -215,16 +299,16 @@ export default function RegisData() {
                     </Form.Select>
                   </Form.Group>
                 </Col>
-                <Col md={6}>
+                {/* <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="status">Status</Form.Label>
                     <Form.Control type="text" id="status" />
                   </Form.Group>
-                </Col>
+                </Col> */}
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="timeOption">Pilihan Waktu</Form.Label>
-                    <Form.Select id="timeOption">
+                    <Form.Select id="timeOption"  name="departmentTime" value={formData.departmentTime} onChange={handleChange} required >
                       <option value="">Pilih Waktu</option>
                       <option value="below1M">08.00 WIB (Pagi)</option>
                       <option value="1M-3M">14.00 WIB (Siang)</option>
@@ -232,10 +316,11 @@ export default function RegisData() {
                     </Form.Select>
                   </Form.Group>
                 </Col>
+                <Col md={6}> </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="paymentStatus">Status Pembayaran</Form.Label>
-                    <Form.Select id="paymentStatus">
+                    <Form.Select id="paymentStatus"  name="status" value={formData.status} onChange={handleChange} required >
                       <option value="">Pilih Status Pembayaran</option>
                       <option value="belum_bayar">Belum Bayar</option>
                       <option value="uang_pendaftaran">Uang Pendaftaran | Rp 200.000</option>
@@ -247,7 +332,7 @@ export default function RegisData() {
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="fileUpload">Bukti Pembayaran</Form.Label>
                     <div className="input-group mb-3">
-                      <input type="file" className="form-control" id="fileUpload" />
+                      <input type="file" className="form-control" id="fileUpload" name="receipt" onChange={handleFileChange}  />
                     </div>
                   </Form.Group>
                 </Col>
@@ -269,6 +354,7 @@ export default function RegisData() {
           </Container>
         </Container>
       </div>
+      </form>
     </>
   );
 }
