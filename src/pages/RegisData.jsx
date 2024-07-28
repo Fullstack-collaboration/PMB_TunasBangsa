@@ -104,11 +104,6 @@ axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
     }
   };
 
-   // If biodata exists, render nothing to prevent access
-   if (biodataExists) {
-    return null;
-  }
-
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("data"))
     setFormData((prevFormData) => ({
@@ -117,6 +112,11 @@ axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
     }))
     console.log(formData.userId)
   }, [])
+
+     // If biodata exists, render nothing to prevent access
+     if (biodataExists) {
+      return null;
+    }
 
   return (
     <>
@@ -338,7 +338,7 @@ axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
                       <option value="">Pilih Waktu</option>
                       <option value="below1M">08.00 WIB (Pagi)</option>
                       <option value="1M-3M">14.00 WIB (Siang)</option>
-                      <option value="3M-5M">(Malam)</option>
+                      <option value="3M-5M">18.00 WIB (Malam)</option>
                     </Form.Select>
                   </Form.Group>
                 </Col>
