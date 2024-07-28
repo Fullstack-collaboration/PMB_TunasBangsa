@@ -1,8 +1,9 @@
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const Berkas = () => {
     const [formData, setFormData] = useState({
+        userId: 0,
         sktl: "",
         ktp: "",
         ijazah: "",
@@ -10,12 +11,6 @@ const Berkas = () => {
     })
 
     const handleFileChange = (e) => {
-        // const {name, files} = e.target
-        // setFormData({
-        //     ...formData,
-        //     [name]: files[0]
-        // })
-
         setFormData({
             ...formData,
             [e.target.name]: e.target.files[0]
@@ -25,14 +20,15 @@ const Berkas = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const formData = new FormData()
-        formData.append("sktl", formData.sktl)
-        formData.append("ktp", formData.ktp)
-        formData.append("ijazah", formData.ijazah)
-        formData.append("kartukeluarga", formData.kartukeluarga)
+        const data = new FormData()
+        data.append("userId", formData.userId)
+        data.append("sktl", formData.sktl)
+        data.append("ktp", formData.ktp)
+        data.append("ijazah", formData.ijazah)
+        data.append("kartukeluarga", formData.kartukeluarga)
 
         try {
-            const response = await axios.post("http://localhost:3003/document", formData, {
+            const response = await axios.post("https://pmb-backend.vercel.app/document", data, {
                 headers: {
                     "Content-Type" : "multipart/form-data"
                 }
@@ -42,6 +38,15 @@ const Berkas = () => {
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("data"))
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          userId: parseInt(user.id)
+        }))
+        console.log(formData.userId)
+      }, [])
 
     return (
         <>
