@@ -1,7 +1,11 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
 
 const Berkas = () => {
+    const navigate = useNavigate()
+
     const [formData, setFormData] = useState({
         userId: 0,
         sktl: "",
@@ -33,31 +37,48 @@ const Berkas = () => {
                     "Content-Type" : "multipart/form-data"
                 }
             })
-            console.log(response)
+        toast.success("Berkas berhasil diupload");
+        navigate("/"); // Redirect to homepage on success
         } catch (error) {
-            console.log(error)
+        toast.error("Terjadi kesalahan. Coba lagi.");
         }
-      });
-      toast.success("Berkas berhasil diupload");
-      navigate("/"); // Redirect to homepage on success
-    } catch (error) {
-      toast.error("Terjadi kesalahan. Coba lagi.");
     }
-  };
-
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("data"))
+        if(!user) {
+          toast.error("Anda harus login terlebih dahulu")
+          // delay 2 detik
+          setTimeout(() => {
+            navigate("/login")
+          }, 1500)
+        } else {
         setFormData((prevFormData) => ({
           ...prevFormData,
           userId: parseInt(user.id)
         }))
+      }
         console.log(formData.userId)
       }, [])
 
+    // useEffect(() => {
+    //     const user = JSON.parse(localStorage.getItem("data"))
+    //     if(!user) {
+    //         toast.error("Anda harus login terlebih dahulu")
+    //         navigate("/login")
+    //     } else {
+    //         setFormData((prevFormData) => ({
+    //             ...prevFormData,
+    //             userId: parseInt(user.id)
+    //         }))
+    //     }
+    //     console.log(formData.userId)
+
+    // }, [])
+
     return (
         <>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+            <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
             <div className="container">
                 <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -107,11 +128,8 @@ const Berkas = () => {
                     </div>
                 </form>
             </div>
-          </div>
-        </form>
-      </div>
-    </>
-  );
+        </>
+);
 };
 
 export default Berkas;

@@ -41,27 +41,31 @@ export default function RegisData() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(async () => {
     const user = JSON.parse(localStorage.getItem("data"));
     if (user) {
       const userId = parseInt(user.id);
       setFormData((prevFormData) => ({ ...prevFormData, userId }));
 
-// Check if biodata already exists
-axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
-.then(response => { 
-  console.log(response.data); // Log the biodata response
-  if (response.data.user.biodata) {
+    // Check if biodata already exists
+    axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
+    .then(response => { 
+      console.log(response.data); // Log the biodata response
+      if (response.data.user.biodata) {
         setBiodataExists(true);
             toast.info("Kamu sudah mengisi biodata.");
-            navigate("/"); // Redirect to homepage if biodata exists
+            // delay 2 detik
+            setTimeout(() => {
+              // navigate("/berkas")
+              navigate("/status"); // Redirect to homepage if biodata exists
+            }, 1500)
         }
       })
       .catch(error => {
         console.error("Error checking biodata:", error);
       });
       }
-      }, [navigate]);
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -104,12 +108,21 @@ axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
     }
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("data"))
+  useEffect(async () => {
+    const user = await JSON.parse(localStorage.getItem("data"))
+    if(!user) {
+      toast.error("Anda harus login terlebih dahulu")
+      // delay 2 detik
+      setTimeout(() => {
+        navigate("/login")
+      }, 1500)
+      // navigate("/login")
+    } else {
     setFormData((prevFormData) => ({
       ...prevFormData,
       userId: parseInt(user.id)
     }))
+  }
     console.log(formData.userId)
   }, [])
 
@@ -120,6 +133,8 @@ axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
 
   return (
     <>
+    {/* <ToastContainer /> */}
+    <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
       <form onSubmit={handleSubmit}>
       <div className="halaman-profile">
         <Container className="mt-5">
