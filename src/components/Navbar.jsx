@@ -1,13 +1,14 @@
 import logo from "../assets/svg/footer_logo.svg";
-import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import "./navbar.css";
 import { useState, useEffect } from "react";
 import { BsCaretDownFill } from "react-icons/bs";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 function NavbarComponent() {
   const [changeColor, setChangeColor] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const changeBackgroundColor = () => {
     if (window.scrollY > 10) {
@@ -41,9 +42,11 @@ function NavbarComponent() {
 
   const dataLocalStorage = localStorage.getItem("data");
   const userData = JSON.parse(dataLocalStorage);
-  console.log(userData);
 
   useEffect(() => {}, [userData]);
+
+  const hideNavItems = location.pathname === "/admin";
+
   return (
     <Navbar expand="lg" className={changeColor ? "color-active" : ""}>
       <div className="container-fluid mx-lg-5 mt-lg-2 ">
@@ -63,33 +66,19 @@ function NavbarComponent() {
         </button>
         <Navbar.Collapse id="navbarTogglerDemo02">
           <Nav className="me-auto mb-2 mb-lg-0">
-            <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
-              <NavLink to="/biodata" className={"btn fw-semibold"}>Biodata</NavLink>
-            </Nav.Item>
-            <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
-              <NavLink to="/berkas" className={"btn fw-semibold"}>Berkas</NavLink>
-            </Nav.Item>
-            <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
-              <NavLink to="/status" className={"btn fw-semibold"}>Status Pendaftaran</NavLink>
-            </Nav.Item>
-            {/* <NavDropdown
-              title="Program Kami"
-              id="our-programs-dropdown"
-              className="text-decoration-none text-center text-dark fw-semibold custom-dropdown"
-            >
-              <NavDropdown.Item
-                href="/halaman-buku"
-                className="text-light link-dark fw-semibold text-center"
-              >
-                BukuPedia
-              </NavDropdown.Item>
-              <NavDropdown.Item
-                href="/halaman-video"
-                className="text-light link-dark fw-semibold text-center"
-              >
-                NontonPintar
-              </NavDropdown.Item>
-            </NavDropdown> */}
+            {!hideNavItems && (
+              <>
+                <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
+                  <NavLink to="/biodata" className={"btn fw-semibold"}>Biodata</NavLink>
+                </Nav.Item>
+                <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
+                  <NavLink to="/berkas" className={"btn fw-semibold"}>Berkas</NavLink>
+                </Nav.Item>
+                <Nav.Item className="nav-item mx-lg-3 text-center fw-semibold">
+                  <NavLink to="/status" className={"btn fw-semibold"}>Status Pendaftaran</NavLink>
+                </Nav.Item>
+              </>
+            )}
           </Nav>
           <Nav className=" ms-auto d-flex navbar-nav">
             {userData ? (
@@ -150,7 +139,7 @@ function NavbarComponent() {
                 </Nav.Item>
                 <Nav.Item
                   className="nav-item mt-2 text-center font-general"
-                  id="regsiter"
+                  id="register"
                 >
                   <Nav.Link
                     className="btn btn-link text-decoration-none text-primary fw-bold"
