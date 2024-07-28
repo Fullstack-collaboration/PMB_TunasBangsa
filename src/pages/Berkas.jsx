@@ -63,18 +63,34 @@ const Berkas = () => {
           ...prevFormData,
           userId: parseInt(user.id)
         }))
-
-        if(user.document && user.document.sktl && user.document.ijazah && user.document.kartukeluarga) {
-            toast.error("Anda sudah mengupload berkas")
-            setTimeout(() => {
-                navigate("/status")
-            }
-            , 1500)
-        //   navigate("/status")
-        }
       }
         console.log(formData.userId)
       }, [])
+
+    //   useEffect(() => {
+        // const fetchedUser = axios.get("https://pmb-backend.vercel.app/user/" + formData.userId)
+
+        // if (fetchedUser.) {
+        //   navigate("/status")
+        // }
+        const checkdata = async () => {
+            try {
+                const response = await axios.get(`https://pmb-backend.vercel.app/user/${formData.userId}`);
+                console.log(response)
+                  if (response.data.user.document) {
+                    // setBiodataExists(true)
+                    toast.info("Kamu sudah mengupload berkas.")
+                    setTimeout(() => {
+                      navigate("/status"); // Redirect to the status page if biodata exists
+                    }, 1500);
+                  }
+            } catch (e) {
+                console.log(e)
+            }
+
+        }
+        checkdata()
+    //   }, [navigate])
 
     // useEffect(() => {
     //     const user = JSON.parse(localStorage.getItem("data"))

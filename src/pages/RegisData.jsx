@@ -177,6 +177,7 @@ export default function RegisData() {
           if (response.data.user.biodata) {
             setBiodataExists(true)
             toast.info("Kamu sudah mengisi biodata.")
+            alert("Kamu sudah mengisi biodata.")
             setTimeout(() => {
               navigate("/status"); // Redirect to the status page if biodata exists
             }, 1500);
