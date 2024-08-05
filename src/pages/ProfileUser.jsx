@@ -66,12 +66,24 @@ export default function ViewData() {
       const response = await axios.post(`https://pmb-backend.vercel.app/user/updatepayment/${formData.id}`, form);
       toast.success("Data berhasil di update.");
       console.log(response.data);
-      if (response.data.status === "success") {
+      // if (response.data.status === "success") {
+        Swal.fire({
+          title: 'Berhasil',
+          text: 'Update Pembayaran berhasil',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        })
         navigate("/profile");
-      }
+      // }
     } catch (e) {
       console.log(e.message);
-      toast.info(e.message);
+      // toast.info(e.message);
+      Swal.fire({
+        title: 'GAGAL',
+        text: e.message,
+        icon: 'warning',
+        confirmButtonText: 'Ok'
+      })
     }
   };
 
