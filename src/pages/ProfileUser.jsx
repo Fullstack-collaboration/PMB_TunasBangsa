@@ -16,7 +16,7 @@ export default function ViewData() {
   const [newReceipt, setNewReceipt] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchUserData = () => {
     const user = JSON.parse(localStorage.getItem("data"));
     if (user) {
       const userId = parseInt(user.id);
@@ -37,6 +37,10 @@ export default function ViewData() {
           console.error("Error fetching biodata:", error);
         });
     }
+  }
+
+  useEffect(() => {
+    fetchUserData()
   }, [navigate]);
 
   const formatDate = (dateString) => {
@@ -74,7 +78,9 @@ export default function ViewData() {
           icon: 'success',
           confirmButtonText: 'Ok'
         })
-        navigate("/profile");
+        // navigate("/profile");
+        // refresh 
+        fetchUserData();
       // }
     } catch (e) {
       console.log(e.message);
