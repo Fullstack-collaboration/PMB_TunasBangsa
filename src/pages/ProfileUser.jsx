@@ -1,64 +1,118 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap"; 
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import ContentLoader, { List } from "react-content-loader";
+import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
 
 export default function ViewData() {
   const [formData, setFormData] = useState(null);
   const [documents, setDocuments] = useState(null);
+  const [newStatus, setNewStatus] = useState(null);
+  const [newReceipt, setNewReceipt] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("data"));
     if (user) {
       const userId = parseInt(user.id);
-      axios.get(`https://pmb-backend.vercel.app/user/${userId}`)
-        .then(response => {
+      axios
+        .get(`https://pmb-backend.vercel.app/user/${userId}`)
+        .then((response) => {
           console.log(response.data.user.documents);
           if (response.data.user.biodata) {
             setFormData(response.data.user.biodata);
-          // } else if (response.data.user.documents) {
+            // } else if (response.data.user.documents) {
             setDocuments(response.data.user.documents);
-          } 
-          else {
+          } else {
             toast.info("Kamu belum mengisi biodata.");
             navigate("/regisdata");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error fetching biodata:", error);
         });
     }
   }, [navigate]);
 
-  
-
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
-  }
+  };
 
-  if (!formData) {
-    return <p>Loading...</p>;
-  }
+  console.log(formData);
+  console.log(documents);
 
-  console.log(formData)
-  console.log(documents)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // fetch /user/updatepayment/4
 
+    const form = new FormData();
+    form.append("status", newStatus);
+    form.append("receipt", newReceipt);
+
+    // const newData = {
+    //   status: newStatus,
+    //   receipt: newReceipt,
+    // };
+
+    try {
+      const response = await axios.post(`https://pmb-backend.vercel.app/user/updatepayment/${formData.id}`, form);
+      toast.success("Data berhasil di update.");
+      console.log(response.data);
+      if (response.data.status === "success") {
+        navigate("/profile");
+      }
+    } catch (e) {
+      console.log(e.message);
+      toast.info(e.message);
+    }
+  };
+
+  const handleChange = (e) => {
+    setNewStatus(e.target.value);
+    console.log(newStatus);
+  };
+
+  const handleFileChange = (e) => {
+    // const file = e.target.files[0]
+    setNewReceipt(e.target.files[0]);
+  };
 
   return (
     <>
-      <div className="halaman-profile">
-        <Container className="mt-5">
-          <Row>
-            <h2 className="text-center fw-bold">Data Diri</h2>
-          </Row>
+      {!formData ? (
+        <div className="container h-100" style={{ height: "200px" }}>
+          <div className="row justify-content-center text-center h-100">
+            <div className="col d-flex align-items-center justify-content-center h-100">
+              <div className="d-flex justify-content-center align-items-center mt-5" style={{ height: "100vh" }}>
+                {/* <div>Loading....</div> */}
+                {/* <SkeletonTheme baseColor="#202020" highlightColor="#444"> */}
+                <p>
+                  {/* <Skeleton count={10} /> || */}
+                  {/* <List /> */}
+                  <ClimbingBoxLoader color={"#047CB6"} loading={true} size={40} />
+                  {/* Sedang memuat data user, mohon tunggu beberapa saat ... */}
+                </p>
+                {/* </SkeletonTheme> */}
+                {/* <Skeleton count={10}/> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="halaman-profile">
           <Container className="mt-5">
+            <Row>
+              <h2 className="text-center fw-bold">Data Diri</h2>
+            </Row>
+            <Container className="mt-5">
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
@@ -104,16 +158,16 @@ export default function ViewData() {
                   </Form.Group>
                 </Col>
               </Row>
-          </Container>
+            </Container>
 
-          <Row className="mt-5">
-            <h2 className="text-center fw-bold">Data Orang Tua</h2>
-          </Row>
+            <Row className="mt-5">
+              <h2 className="text-center fw-bold">Data Orang Tua</h2>
+            </Row>
 
-          <Row>
-            <h4 className="text-start fw-bold">1. Ayah</h4>
-          </Row>
-          <Container className="mt-3">
+            <Row>
+              <h4 className="text-start fw-bold">1. Ayah</h4>
+            </Row>
+            <Container className="mt-3">
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
@@ -156,12 +210,12 @@ export default function ViewData() {
                   </Form.Group>
                 </Col>
               </Row>
-          </Container>
+            </Container>
 
-          <Row className="mt-5">
-            <h4 className="text-start fw-bold">2. Ibu</h4>
-          </Row>
-          <Container className="mt-3">
+            <Row className="mt-5">
+              <h4 className="text-start fw-bold">2. Ibu</h4>
+            </Row>
+            <Container className="mt-3">
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
@@ -204,33 +258,33 @@ export default function ViewData() {
                   </Form.Group>
                 </Col>
               </Row>
-          </Container>
+            </Container>
 
-          <Container className="mt-3">
-            {/* <Form> */}
+            <Container className="mt-3">
+              {/* <Form> */}
               <Row>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="schoolName">Nama Sekolah</Form.Label>
-                    <Form.Control type="text" id="schoolName"  name="schoolOrigin" value={formData.schoolOrigin}  disabled />
+                    <Form.Control type="text" id="schoolName" name="schoolOrigin" value={formData.schoolOrigin} disabled />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="yearGraduate">Tahun Tamat</Form.Label>
-                    <Form.Control type="text" id="yearGraduate"  name="schoolGraduateYear" value={formData.schoolGraduateYear}  disabled />
+                    <Form.Control type="text" id="yearGraduate" name="schoolGraduateYear" value={formData.schoolGraduateYear} disabled />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="schoolAddress">Alamat Sekolah</Form.Label>
-                    <Form.Control type="text" id="schoolAddress"  name="schoolOriginAddress" value={formData.schoolOriginAddress}  disabled />
+                    <Form.Control type="text" id="schoolAddress" name="schoolOriginAddress" value={formData.schoolOriginAddress} disabled />
                   </Form.Group>
                 </Col>
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="program">Jenjang dan Prodi</Form.Label>
-                    <Form.Control type="text" id="department"  name="department" value={formData.department}  disabled />
+                    <Form.Control type="text" id="department" name="department" value={formData.department} disabled />
                     {/* <Form.Select id="program"  name="department" value={formData.department}  disabled >
                       <option value="">Pilih Jenjang dan Prodi</option>
                       <option value="Teknik Informatika (S1)">Teknik Informatika (S1)</option>
@@ -249,7 +303,7 @@ export default function ViewData() {
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="timeOption">Pilihan Waktu</Form.Label>
-                    <Form.Control type="text" id="departmentTime"  name="departmentTime" value={formData.departmentTime}  disabled />
+                    <Form.Control type="text" id="departmentTime" name="departmentTime" value={formData.departmentTime} disabled />
                     {/* <Form.Select id="timeOption"  name="departmentTime" value={formData.departmentTime}  disabled >
                       <option value="">Pilih Waktu</option>
                       <option value="08.00 WIB (Pagi)">08.00 WIB (Pagi)</option>
@@ -258,53 +312,64 @@ export default function ViewData() {
                     </Form.Select> */}
                   </Form.Group>
                 </Col>
-                <Col md={6}> </Col>
-                <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label htmlFor="paymentStatus">Status Pembayaran</Form.Label>
-                    <Form.Control type="text" id="status"  name="status" value={formData.status}  disabled />
-                    {/* <Form.Select id="paymentStatus"  name="status" value={formData.status}  disabled >
-                      <option value="">Pilih Status Pembayaran</option>
-                      <option value="Belum Bayar">Belum Bayar</option>
-                      <option value="Uang Pendaftaran  (Rp 200.000)">Uang Pendaftaran | Rp 200.000</option>
-                      <option value="Uang Pendaftaran + Cicilan Pertama">Uang Pendaftaran + Cicilan Pertama</option>
-                    </Form.Select> */}
-                  </Form.Group>
-                </Col>
-                {/* <Col md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label htmlFor="fileUpload">Bukti Pembayaran</Form.Label>
-                    <div className="input-group mb-3">
-                      <input type="file" className="form-control" id="fileUpload" name="receipt"   />
+                {/* <Col md={6}> </Col> */}
+                <form onSubmit={handleSubmit}>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label htmlFor="paymentStatus">Status Pembayaran</Form.Label>
+                      {/* <Form.Control type="text" id="status"  name="status" value={formData.status}   /> */}
+                      <Form.Select id="paymentStatus" name="status" placeholder={formData.status} value={newStatus} onChange={handleChange}>
+                        <option value="">{formData.status}</option>
+                        <option value="Belum Bayar">Belum Bayar</option>
+                        <option value="Uang Pendaftaran  (Rp 200.000)">Uang Pendaftaran | Rp 200.000</option>
+                        <option value="Uang Pendaftaran + Cicilan Pertama">Uang Pendaftaran + Cicilan Pertama</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label htmlFor="fileUpload">Bukti Pembayaran</Form.Label>
+                      <div className="input-group mb-3">
+                        <input type="file" className="form-control" id="fileUpload" name="receipt" onChange={handleFileChange} />
+                      </div>
+                      <p className="text-danger ">* hanya upload foto dengan format jpeg, jpg, png, svg</p>
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <div className="col mx-auto">
+                      <h5>Bukti Pembayaran</h5>
+                      <img src={formData.receipt} alt="receipt" width={200} />
                     </div>
-                  </Form.Group>
-                </Col> */}
+                  </Col>
+                  <button className="btn btn-primary mt-2">Update Pembayaran</button>
+                </form>
               </Row>
 
-            {/* </Form> */}
+              {/* </Form> */}
+            </Container>
+            <Container className="mt-3">
+              <div className="row mx-auto">
+                <div className="col mx-auto">
+                  <h5>Ktp</h5>
+                  <img src={documents.ktp} alt="ktp" width={200} />
+                </div>
+                <div className="col mx-auto">
+                  <h5>sktl</h5>
+                  <img src={documents.sktl} alt="sktl" width={200} />
+                </div>
+                <div className="col mx-auto">
+                  <h5>ijazah</h5>
+                  <img src={documents.ijazah} alt="ijazah" width={200} />
+                </div>
+                <div className="col mx-auto">
+                  <h5>Kartu Keluarga</h5>
+                  <img src={documents.kartukeluarga} alt="kartukeluarga" width={200} />
+                </div>
+              </div>
+            </Container>
           </Container>
-          <Container className="mt-3">
-            <div className="row mx-auto">
-              <div className="col mx-auto">
-                <h5>Ktp</h5>
-                <img src={documents.ktp} alt="ktp" width={200} />
-              </div>
-              <div className="col mx-auto">
-                <h5>sktl</h5>
-                <img src={documents.sktl} alt="sktl" width={200} />
-              </div>
-              <div className="col mx-auto">
-                <h5>ijazah</h5>
-                <img src={documents.ijazah} alt="ijazah" width={200} />
-              </div>
-              <div className="col mx-auto">
-                <h5>Kartu Keluarga</h5>
-                <img src={documents.kartukeluarga} alt="kartukeluarga" width={200} />
-              </div>
-            </div>
-          </Container>
-        </Container>
-      </div>
+        </div>
+      )}
     </>
   );
 }
