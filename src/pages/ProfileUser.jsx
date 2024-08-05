@@ -7,6 +7,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import ContentLoader, { List } from "react-content-loader";
 import ClimbingBoxLoader from "react-spinners/ClimbingBoxLoader";
+import Swal from "sweetalert2";
 
 export default function ViewData() {
   const [formData, setFormData] = useState(null);
