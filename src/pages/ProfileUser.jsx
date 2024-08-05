@@ -27,7 +27,7 @@ export default function ViewData() {
           if (response.data.user.biodata) {
             setFormData(response.data.user.biodata);
             // } else if (response.data.user.documents) {
-            setDocuments(response.data.user.documents);
+            setDocuments(response?.data?.user?.documents);
           } else {
             toast.info("Kamu belum mengisi biodata.");
             navigate("/regisdata");
@@ -370,19 +370,19 @@ export default function ViewData() {
               <div className="row mx-auto">
                 <div className="col mx-auto">
                   <h5>Ktp</h5>
-                  <img src={documents.ktp} alt="ktp" width={200} />
+                  <img src={documents?.ktp} alt="ktp" width={200} />
                 </div>
                 <div className="col mx-auto">
                   <h5>sktl</h5>
-                  <img src={documents.sktl} alt="sktl" width={200} />
+                  <img src={documents?.sktl} alt="sktl" width={200} />
                 </div>
                 <div className="col mx-auto">
                   <h5>ijazah</h5>
-                  <img src={documents.ijazah} alt="ijazah" width={200} />
+                  <img src={documents?.ijazah} alt="ijazah" width={200} />
                 </div>
                 <div className="col mx-auto">
                   <h5>Kartu Keluarga</h5>
-                  <img src={documents.kartukeluarga} alt="kartukeluarga" width={200} />
+                  <img src={documents?.kartukeluarga} alt="kartukeluarga" width={200} />
                 </div>
               </div>
             </Container>
