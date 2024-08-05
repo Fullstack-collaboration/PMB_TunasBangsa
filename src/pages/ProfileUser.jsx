@@ -64,7 +64,7 @@ export default function ViewData() {
     // };
 
     try {
-      const response = await axios.post(`https://pmb-backend.vercel.app/user/updatepayment/${formData.id}`, form);
+      const response = await axios.post(`https://pmb-backend.vercel.app/user/updatepayment/${formData.userId}`, form);
       toast.success("Data berhasil di update.");
       console.log(response.data);
       // if (response.data.status === "success") {
