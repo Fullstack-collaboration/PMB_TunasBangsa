@@ -34,12 +34,17 @@ export default function Status() {
 
         setName(response.data.user.biodata.fullName); // Set the name from API data
 
-        if (apiStatus === "belum_bayar") {
-          setStatus("failure");
-        } else if (apiStatus === "uang_pendaftaran" || apiStatus === "pendaftaranCicilan") {
-          setStatus("success");
+        // if (apiStatus === "belum_bayar") {
+        //   setStatus("failure");
+        // } else if (apiStatus === "uang_pendaftaran" || apiStatus === "pendaftaranCicilan") {
+        //   setStatus("success");
+        // } else {
+        //   setStatus("failure");
+        // }
+        if (apiStatus === "Belum Bayar" || apiStatus === "belum_bayar") {
+          setStatus("failure")
         } else {
-          setStatus("failure");
+          setStatus("success")
         }
       } catch (error) {
         toast.error("Terjadi kesalahan saat memuat status.");
